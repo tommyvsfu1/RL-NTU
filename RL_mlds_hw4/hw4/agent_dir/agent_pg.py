@@ -94,7 +94,15 @@ class Agent_PG(Agent):
         #print("sample action", sample_action)
         #print(pe.predict(s))
         #print(pe.network(torch.FloatTensor(s)))
-        
+        plt.plot(range(5),range(5))
+        plt.savefig('foo.png')
+        plt.savefig('foo.pdf')
+
+
+
+
+
+
         NN = 600
         episode_reward = np.array([])
         loss_history = np.array([])
@@ -138,8 +146,9 @@ class Agent_PG(Agent):
             episode_reward = np.append(episode_reward, total_reward)
             # Discount and Normalize rewards
             Tn = reward_tensor.shape[0]
-            for t in range(Tn):
-                reward_tensor[t] = self.discount_reward(reward_tensor, t, Tn) 
+            reward_tensor = self.karparthy_discount_reward(reward_tensor)
+            #for t in range(Tn):
+            #    reward_tensor[t] = self.discount_reward(reward_tensor, t, Tn) 
             #reward_tensor = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-10) # normalization
             #b = np.sum(reward_tensor) / reward_tensor.shape[0] # expectation of reward
             #advatange_function = (torch.from_numpy(reward_tensor - b)).float()
@@ -255,6 +264,18 @@ class Agent_PG(Agent):
         for t_prime in range(t,Tn): # range(t,Tn+1) = [t, t+1, ..., Tn]
             sum += (np.power(discount_factor, t_prime-t) * reward_tensor[t_prime]) # factor * reward
         return sum
+    def karparthy_discount_reward(self, r):
+        """ take 1D float array of rewards and compute discounted reward """
+        gamma = 0.99
+        discounted_r = np.zeros_like(r)
+        running_add = 0
+        for t in reversed(range(0, r.shape[0])):
+            if r[t] != 0 : 
+                running_add = 0 # reset the sum, since this was a game boundary (pong specific!)
+            running_add = running_add * gamma + r[t]
+            discounted_r[t] = running_add
+        return discounted_r
+
     def flatten(self,x):
         N = x.shape[0] # read in N, C, H, W
         return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
