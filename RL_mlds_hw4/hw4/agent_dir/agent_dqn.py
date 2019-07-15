@@ -12,7 +12,6 @@ class Agent_DQN(Agent):
         if args.test_dqn:
             #you can load your model here
             print('loading trained model')
-
         ##################
         # YOUR CODE HERE #
         ##################

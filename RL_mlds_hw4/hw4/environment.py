@@ -6,7 +6,7 @@ You DO NOT need to upload this file
 """
 import gym
 import numpy as np
-from atari_wrapper import make_wrap_atari
+from deepmind_atari_wrapper import make_wrap_atari
 
 class Environment(object):
     def __init__(self, env_name, args, atari_wrapper=False, test=False):
