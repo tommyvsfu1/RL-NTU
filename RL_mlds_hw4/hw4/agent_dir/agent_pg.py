@@ -62,7 +62,7 @@ class Agent_PG(Agent):
             torch.nn.Linear(H, D_out),
             torch.nn.Softmax(dim=-1)
         ).to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-3)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
         ##################
 
 
@@ -94,16 +94,13 @@ class Agent_PG(Agent):
         #print("sample action", sample_action)
         #print(pe.predict(s))
         #print(pe.network(torch.FloatTensor(s)))
-        plt.plot(range(5),range(5))
-        plt.savefig('foo.png')
-        plt.savefig('foo.pdf')
+        #plt.plot(range(10), range(10))
+        #plt.savefig('f.png')
 
 
 
 
-
-
-        NN = 600
+        NN = 1000
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
@@ -204,8 +201,9 @@ class Agent_PG(Agent):
             
             #print(loss)
         plt.plot(range(NN),episode_reward)
-        plt.show()
-        
+        #plt.show()
+        plt.savefig('loss.png')
+        plt.savefig('loss.pdf')
         ##################
         
 
