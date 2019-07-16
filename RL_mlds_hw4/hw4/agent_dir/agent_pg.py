@@ -278,21 +278,6 @@ class Agent_PG(Agent):
         N = x.shape[0] # read in N, C, H, W
         return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
 
-    def debugger(self, observation, count, action=5):
-        '''
-        Input :
-            count : means each frame of the postfix image file name 
-            action : test the action meaning
-
-        Output :
-            debug_image/ : directory of one epoch images
-            debug_action.txt : action text file
-        '''
-        cv2.imwrite("debug_image/"'output'+str(count)+str('.jpg'), observation)
-        fp = open("debug_action.txt", "a")
-        fp.writelines(str(action))
-        fp.close()
-
 
     def discount_rewards(self,rewards, gamma=0.99):
         r = np.array([gamma**i * rewards[i] 
@@ -387,3 +372,17 @@ class Agent_PG(Agent):
         if classname.find('Linear') != -1:
             m.weight.data.normal_(0.0, 0.02)
     
+    def debugger(self, observation, count, action=5):
+        '''
+        Input :
+            count : means each frame of the postfix image file name 
+            action : test the action meaning
+
+        Output :
+            debug_image/ : directory of one epoch images
+            debug_action.txt : action text file
+        '''
+        cv2.imwrite("debug_image/"'output'+str(count)+str('.jpg'), observation)
+        fp = open("debug_action.txt", "a")
+        fp.writelines(str(action))
+        fp.close()

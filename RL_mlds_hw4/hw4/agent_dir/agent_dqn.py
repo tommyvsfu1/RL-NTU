@@ -3,9 +3,13 @@ from collections import namedtuple
 import numpy as np
 import random
 import torch
-
+import cv2
+import matplotlib.pyplot as plt
 Transition = namedtuple('Transition',
                         ('state', 'action','reward', 'next_state'))
+def expand_dim(x):
+    y = torch.unsqueeze(input=x,dim=0)
+    return y
 
 class Q_pi(torch.nn.Module):
     """
@@ -17,7 +21,7 @@ class Q_pi(torch.nn.Module):
         super(Q_pi, self).__init__()
 
         self.device = device
-        self.epsilon = 0.5
+        self.epsilon = 1.0
         self.action_space_size = action_space_n
         H, D_out = 256, action_space_n
         self.model = torch.nn.Sequential(
@@ -25,7 +29,7 @@ class Q_pi(torch.nn.Module):
             torch.nn.ReLU(),
             torch.nn.Linear(H, D_out), # output layer size = action space size
         ).to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(),lr=1.5e-4)
 
     def flatten(self, x):
         """
@@ -33,10 +37,8 @@ class Q_pi(torch.nn.Module):
             Input : Image (N,84,84,4)
             Output : torch.tensor : (N,84*84*4)
         """
-        x = x.reshape(-1)
-        x = np.expand_dims(x, axis=0)
-        x = torch.from_numpy(x).float()
-        return x
+        N = x.shape[0] # read in N, C, H, W
+        return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
 
     def forward(self, x): # with epsilon greedy
         """
@@ -46,6 +48,7 @@ class Q_pi(torch.nn.Module):
         """
         pred = self.model(self.flatten(x))
         return pred
+        
     def epsilon_greedy(self, pred):
         """
         Output : epsilon_greedy(argmax(Q_fn(x)),random(action_space)) 
@@ -108,8 +111,10 @@ class Agent_DQN(Agent):
 
         self.Q_fn = Q_pi(84*84*4,self.env.get_action_space().n, self.device)
         self.Q_hat_fn = Q_pi(84*84*4,self.env.get_action_space().n, self.device)
+        self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
+        self.Q_hat_fn.eval()
         self.replay_buffer = ReplayBuffer() 
-        self.BATCH_SIZE = 2
+        self.BATCH_SIZE = 32
 
         ##################
 
@@ -132,44 +137,64 @@ class Agent_DQN(Agent):
         """
         ##################
         # YOUR CODE HERE #
-        ep = 2
-        for episode in range(ep):
-            s_0 = self.env.reset()
+        NUM_EPISODES = 10
+        TARGET_UPDATE_C = 1000
+        UPDATE_FREQUENCY = 4
+        DEBUG_COUNT = 0
+        for episode in range(NUM_EPISODES):
+            s_0 = torch.from_numpy(self.env.reset())
+            episode_reward = 0
+            while(True):
+                self.Q_fn.eval()
+                a_0 = self.make_action(s_0) # select action using epsilon greedy
+                s_1, r_0, done, info =  self.env.step(a_0)
+                episode_reward += r_0
+                DEBUG_COUNT = self.debug_observation_frame(DEBUG_COUNT,s_0)
+                
+                if done == True:
+                    break
+                # push data into replay buffer
+                # note : 
+                # 1. Before pushing, transform into torch.tensor
+                # 2. expand_dim : x.unsqueeze_(0).shape = (1,x.shape)
+                a_0 = torch.tensor([a_0], device=self.device)
+                r_0 = torch.tensor([r_0], device=self.device)
+                s_1 = torch.from_numpy(s_1)
+                self.replay_buffer.push(expand_dim(s_0), expand_dim(a_0), expand_dim(r_0), expand_dim(s_1))
+                # move to next state
+                s_0 = s_1
 
-
-            a_0 = self.make_action(s_0) # select action using epsilon greedy
-            s_1, r_0, done, info =  self.env.step(a_0)
+                # optimize Q model
+                if len(self.replay_buffer) % UPDATE_FREQUENCY == 0:        
+                    self.optimize_model()
+                
+                # update  Q' model
+                if episode % TARGET_UPDATE_C == 0:
+                    self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
             
-            # push data into replay buffer
-            self.replay_buffer.push(s_0, a_0, r_0, s_1)
-            
-            # move to next state
-            s_0 = s_1
-
-            # optimize model
-            self.optimize_model()
-
-
-
-
+            self.Q_fn.epsilon = self.epsilon_decline(episode + 1, NUM_EPISODES)
+            print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         ##################
-        pass
+        
 
     def optimize_model(self):
         if len(self.replay_buffer) < self.BATCH_SIZE:
-            return
+            return 
 
-        """Sample"""
+        self.Q_fn.train()
+        self.Q_hat_fn.eval()
+        """Sample from Replay Buffer"""
         # sample a batch from replay buffer
         transitions = self.replay_buffer.sample(self.BATCH_SIZE)
         batch = Transition(*zip(*transitions))
 
         non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
                                             batch.next_state)), device=self.device, dtype=torch.uint8)
-        print("not final mask", non_final_mask)
+        
         
         non_final_next_states = torch.cat([s for s in batch.next_state
                                                     if s is not None])
+        
         state_batch = torch.cat(batch.state)
         action_batch = torch.cat(batch.action)
         reward_batch = torch.cat(batch.reward)
@@ -180,13 +205,22 @@ class Agent_DQN(Agent):
         # reference : https://www.cnblogs.com/HongjianChen/p/9451526.html
         state_action_values = self.Q_fn(state_batch).gather(1, action_batch)
 
-
         """Q_hat(Target) Network"""
-        next_state_values = torch.zeros(self.BATCH_SIZE, device=self.device)
-        next_state_values[non_final_mask] = self.Q_hat_fn(non_final_next_states).max(1)[0].detach()
-
+        # .max(1,keepdim=True)[0] return (N,1) vector 
+        # same as below 
+        # for data in range(batch):
+        #   next_state_values[data] = argmax Q'(s_t+1, r_t)
+        next_state_values = self.Q_hat_fn(non_final_next_states).max(1,keepdim=True)[0].detach()
+        expected_state_action_values = (next_state_values) + reward_batch
 
         """Regression"""
+        loss_fn = torch.nn.MSELoss()
+        loss = loss_fn(state_action_values, expected_state_action_values)
+
+        # update
+        self.Q_fn.optimizer.zero_grad()
+        loss.backward()
+        self.Q_fn.optimizer.step()
 
 
     def make_action(self, observation, test=True):
@@ -202,17 +236,31 @@ class Agent_DQN(Agent):
                 the predicted action from trained model
         """
         ##################
-        # YOUR CODE HERE #
-        Q_s_a = self.Q_fn.forward(observation)
+        # YOUR CODE HERE #        
+        Q_s_a = self.Q_fn.forward(expand_dim(observation))
         a_0 = self.Q_fn.epsilon_greedy(Q_s_a)
         return a_0 
-        ##################
-        
-        
-        
-        
-        
-        #return self.env.get_random_action()
+        ##################        
 
-    def exploration_update(self):
-        pass
+    def epsilon_decline(self, ep, NUM_EPISODES):
+        eps_threshold = 0.025 + ((1 - 0.025)*(ep / NUM_EPISODES))
+        return eps_threshold 
+
+    def debug_observation_frame(self, count, observation):
+        '''
+        Input :
+            count : means each frame of the postfix image file name 
+            action : test the action meaning
+
+        Output :
+            debug_image/ : directory of one epoch images
+            debug_action.txt : action text file
+        '''
+        #img = np.float32(observation[:,:,0].numpy())
+        #cv2.imwrite("debug_image/"'output'+str(count)+str('.png'), img)
+        #count+=1
+        #for i in range(4):
+        #    cv2.imwrite("debug_image/"'output'+str(count)+str('.png'), observation[:,:,i].numpy())
+        #    count += 1
+        return count
+        
