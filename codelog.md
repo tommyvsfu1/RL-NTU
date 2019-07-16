@@ -17,3 +17,9 @@ a.今天想到有個很容易做的projects，path planning(grid version)，然�
 b.pybullet projects  
 https://kknews.cc/zh-tw/other/vkm4pg2.html
 
+
+
+#### 7/16
+1.RMS vs Adam  
+
+
