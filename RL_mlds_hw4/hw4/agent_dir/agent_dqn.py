@@ -6,6 +6,8 @@ import cv2
 import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F  # useful stateless functions
+
+
 Transition = namedtuple('Transition',
                         ('state', 'action','reward', 'next_state'))
 def expand_dim(x):
@@ -50,14 +52,14 @@ class Q_pi(torch.nn.Module):
         N = x.shape[0] # read in N, C, H, W
         return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
 
-    def forward(self, x): # with epsilon greedy
+    def forward(self, x): 
         """
         Feedforward 
             Input : torch.tensor : (N,84*84*4)
             Output : Q_fn(s,a) : (N,action_space_n=4)
         """
         # do not use softmax in DQN !!!!!
-        # and remember don't use relu on lasy layers, since it somewhere means kill half of output values
+        # and remember don't use relu on last layers, since it somewhere means kill half of output values
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
@@ -180,7 +182,7 @@ class Agent_DQN(Agent):
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
-        LINEAR_DECLINE_STEP = 1000000
+        LINEAR_DECLINE_STEP = 100000
         time_step = 0
         epsisode_history = []
         for episode in range(NUM_EPISODES):
@@ -217,7 +219,8 @@ class Agent_DQN(Agent):
                 
                 self.Q_epsilon = self.epsilon_decline(time_step,LINEAR_DECLINE_STEP)
             epsisode_history.append(episode_reward)
-            print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
+            print("episode reward",episode_reward,"time_step",time_step,"epsilon",self.Q_epsilon)
+            #print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         plt.plot(range(len(epsisode_history)), epsisode_history)
         plt.savefig('reward_history.png')
         ##################
