@@ -32,11 +32,11 @@ class Q_pi(torch.nn.Module):
         #     torch.nn.ReLU(),
         #     torch.nn.Linear(H, D_out), # output layer size = action space size
         # ).to(self.device)
-        self.conv1 = torch.nn.Conv2d(4,32,kernel_size=8,strides=[4,4],padding=0)
+        self.conv1 = torch.nn.Conv2d(4,32,kernel_size=8,stride=[4,4],padding=0)
         torch.nn.init.kaiming_normal_(self.conv1.weight)
-        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,strides=[2,2],padding=0)
+        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,stride=[2,2],padding=0)
         torch.nn.init.kaiming_normal_(self.conv2.weight)
-        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,strides=[1,1],padding=0)
+        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,stride=[1,1],padding=0)
         torch.nn.init.kaiming_normal_(self.conv3.weight)
         
         self.fc4 = torch.nn.Linear((3136), 512)
