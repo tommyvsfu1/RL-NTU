@@ -170,6 +170,7 @@ class Agent_DQN(Agent):
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
+        epsisode_history = []
         for episode in range(NUM_EPISODES):
             s_0 = torch.from_numpy(prepro(self.env.reset()))
             episode_reward = 0
@@ -200,9 +201,11 @@ class Agent_DQN(Agent):
                 # update  Q' model
                 if episode % TARGET_UPDATE_C == 0:
                     self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
-            
+            epsisode_history.append(episode_reward)
             self.Q_epsilon = self.epsilon_decline(episode + 1, NUM_EPISODES)
             print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
+        plt.plot(range(len(epsisode_history)), epsisode_history)
+        plt.savefig('reward_history.png')
         ##################
         
 
