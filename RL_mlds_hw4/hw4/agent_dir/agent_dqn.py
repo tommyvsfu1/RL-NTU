@@ -2,14 +2,20 @@ from agent_dir.agent import Agent
 from collections import namedtuple
 import numpy as np
 import random
-import torch
 import cv2
 import matplotlib.pyplot as plt
+import torch
+import torch.nn.functional as F  # useful stateless functions
 Transition = namedtuple('Transition',
                         ('state', 'action','reward', 'next_state'))
 def expand_dim(x):
     y = torch.unsqueeze(input=x,dim=0)
     return y
+
+def prepro(o):
+    o = o.transpose((2, 0, 1))
+    return o
+
 
 class Q_pi(torch.nn.Module):
     """
@@ -17,19 +23,18 @@ class Q_pi(torch.nn.Module):
         Input : Image 
         Output : value of each action
     """    
-    def __init__(self, D_in, action_space_n, device):
-        super(Q_pi, self).__init__()
+    def __init__(self, action_space_n, device):
+        super(Q_pi, self).__init__()        
+        # self.model = torch.nn.Sequential(
+        #     torch.nn.Conv2d(4, )
+        #     torch.nn.ReLU(),
+        #     torch.nn.Linear(H, D_out), # output layer size = action space size
+        # ).to(self.device)
+        self.conv1 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
+        torch.nn.init.kaiming_normal_(self.conv1.weight)
+        self.fc2 = torch.nn.Linear((4*82*82), action_space_n)
+        torch.nn.init.kaiming_normal_(self.fc2.weight)       
 
-        self.device = device
-        self.epsilon = 1.0
-        self.action_space_size = action_space_n
-        H, D_out = 256, action_space_n
-        self.model = torch.nn.Sequential(
-            torch.nn.Linear(D_in, H),
-            torch.nn.ReLU(),
-            torch.nn.Linear(H, D_out), # output layer size = action space size
-        ).to(self.device)
-        self.optimizer = torch.optim.RMSprop(self.model.parameters(),lr=1.5e-4)
 
     def flatten(self, x):
         """
@@ -46,19 +51,21 @@ class Q_pi(torch.nn.Module):
             Input : torch.tensor : (N,84*84*4)
             Output : Q_fn(s,a) 
         """
-        pred = self.model(self.flatten(x))
-        return pred
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.fc2(self.flatten(x)))
+        y = F.softmax(x)
+        return y
         
-    def epsilon_greedy(self, pred):
+    def epsilon_greedy(self, pred, epsilon):
         """
         Output : epsilon_greedy(argmax(Q_fn(x)),random(action_space)) 
         """
         pred = pred.detach().numpy() # detach
         pred = pred.reshape(-1)
-        if random.random() > self.epsilon:
+        if random.random() > epsilon:
             a = np.argmax(pred)
         else :
-            a = np.random.choice(range(self.action_space_size))
+            a = np.random.choice(range(4))
         return a
 
 
@@ -109,13 +116,34 @@ class Agent_DQN(Agent):
         print("  action space meaning:", self.env.get_meaning())
         print("  obeservation space",self.env.get_observation_space())
 
-        self.Q_fn = Q_pi(84*84*4,self.env.get_action_space().n, self.device)
-        self.Q_hat_fn = Q_pi(84*84*4,self.env.get_action_space().n, self.device)
+        self.Q_fn = Q_pi(self.env.get_action_space().n, self.device)
+        self.Q_hat_fn = Q_pi(self.env.get_action_space().n, self.device)
         self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
         self.Q_hat_fn.eval()
         self.replay_buffer = ReplayBuffer() 
         self.BATCH_SIZE = 32
+        self.Q_epsilon = 1.0
+        self.optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
 
+        # optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
+        # x = torch.zeros((10, 4, 84, 84), dtype=torch.float32)
+        # self.Q_fn.train()
+        # #x = prepro(np.zeros((84,84,4)))
+        # #x = torch.from_numpy(x)
+        # #x = expand_dim(x)
+        # scores = self.Q_fn(x)
+        # loss_fn = torch.nn.MSELoss()
+        # loss = loss_fn(scores, torch.zeros((10,4)))
+        # optimizer.zero_grad()
+
+        # # This is the backwards pass: compute the gradient of the loss with
+        # # respect to each  parameter of the model.
+        # loss.backward()
+
+        # # Actually update the parameters of the model using the gradients
+        # # computed by the backwards pass.
+        # optimizer.step()
+        # print("scores shape", scores.shape)
         ##################
 
     def init_game_setting(self):
@@ -137,12 +165,13 @@ class Agent_DQN(Agent):
         """
         ##################
         # YOUR CODE HERE #
+        
         NUM_EPISODES = 10
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
         for episode in range(NUM_EPISODES):
-            s_0 = torch.from_numpy(self.env.reset())
+            s_0 = torch.from_numpy(prepro(self.env.reset()))
             episode_reward = 0
             while(True):
                 self.Q_fn.eval()
@@ -159,7 +188,7 @@ class Agent_DQN(Agent):
                 # 2. expand_dim : x.unsqueeze_(0).shape = (1,x.shape)
                 a_0 = torch.tensor([a_0], device=self.device)
                 r_0 = torch.tensor([r_0], device=self.device)
-                s_1 = torch.from_numpy(s_1)
+                s_1 = torch.from_numpy(prepro(s_1))
                 self.replay_buffer.push(expand_dim(s_0), expand_dim(a_0), expand_dim(r_0), expand_dim(s_1))
                 # move to next state
                 s_0 = s_1
@@ -172,7 +201,7 @@ class Agent_DQN(Agent):
                 if episode % TARGET_UPDATE_C == 0:
                     self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
             
-            self.Q_fn.epsilon = self.epsilon_decline(episode + 1, NUM_EPISODES)
+            self.Q_epsilon = self.epsilon_decline(episode + 1, NUM_EPISODES)
             print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         ##################
         
@@ -188,17 +217,16 @@ class Agent_DQN(Agent):
         transitions = self.replay_buffer.sample(self.BATCH_SIZE)
         batch = Transition(*zip(*transitions))
 
-        non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
-                                            batch.next_state)), device=self.device, dtype=torch.uint8)
+        #non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
+        #                                    batch.next_state)), device=self.device, dtype=torch.uint8)
         
         
-        non_final_next_states = torch.cat([s for s in batch.next_state
-                                                    if s is not None])
-        
+        #non_final_next_states = torch.cat([s for s in batch.next_state
+        #                                            if s is not None])
         state_batch = torch.cat(batch.state)
         action_batch = torch.cat(batch.action)
         reward_batch = torch.cat(batch.reward)
-
+        next_state_batch = torch.cat(batch.state)
         """Q Network"""
         # self.Q_fn(state_batch) return (N,(action space))
         # .gater will select the right index
@@ -210,7 +238,7 @@ class Agent_DQN(Agent):
         # same as below 
         # for data in range(batch):
         #   next_state_values[data] = argmax Q'(s_t+1, r_t)
-        next_state_values = self.Q_hat_fn(non_final_next_states).max(1,keepdim=True)[0].detach()
+        next_state_values = self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
         expected_state_action_values = (next_state_values) + reward_batch
 
         """Regression"""
@@ -218,9 +246,9 @@ class Agent_DQN(Agent):
         loss = loss_fn(state_action_values, expected_state_action_values)
 
         # update
-        self.Q_fn.optimizer.zero_grad()
+        self.optimizer.zero_grad()
         loss.backward()
-        self.Q_fn.optimizer.step()
+        self.optimizer.step()
 
 
     def make_action(self, observation, test=True):
@@ -238,7 +266,7 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #        
         Q_s_a = self.Q_fn.forward(expand_dim(observation))
-        a_0 = self.Q_fn.epsilon_greedy(Q_s_a)
+        a_0 = self.Q_fn.epsilon_greedy(Q_s_a, self.Q_epsilon)
         return a_0 
         ##################        
 
