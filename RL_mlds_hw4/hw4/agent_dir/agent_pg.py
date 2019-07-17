@@ -5,31 +5,43 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import cv2
-def prepro(I,image_size=[80,80]):
+import skimage
+
+
+
+def prepro(o,image_size=[80,80]):
     """
     Call this function to preprocess RGB image to grayscale image if necessary
     This preprocessing code is from
-        https://github.com/hiwonjoon/tf-a3c-gpu/blob/master/async_agent.py
-    
+        https://github.com/hiwonjoon/tf-a3c-gpu/blob/master/async_agent.py 
     Input: 
     RGB image: np.array
         RGB screen of game, shape: (210, 160, 3)
     Default return: np.array 
         Grayscale image, shape: (80, 80, 1)
     
-    return shape : (6400,)
     """
-    '''
-    y = o.astype(np.uint8)
+    
+    # obsv : [210, 180, 3] HWC
+    # preprocessing code is partially adopted from https://github.com/carpedm20/deep-rl-tensorflow
+    #y = 1 * o[:,:,0] + 1 * o[:,:,1] + 1 * o[:,:,2]
+    y = 0.2126 * o[:, :, 0] + 0.7152 * o[:, :, 1] + 0.0722 * o[:, :, 2]
+    y = y.astype(np.uint8)
+    #Scipy actually requires WHC images, but it doesn't matter.
     resized = scipy.misc.imresize(y, image_size)
-    return np.expand_dims(resized.astype(np.float32),axis=2)
-    '''
+    print("resized shape", resized.shape)
+    #return np.expand_dims(resized.astype(np.float32),axis=2)
+    return resized.astype(np.float32)
+    """
     I = I[35:195] # crop
     I = I[::2,::2,0] # downsample by factor of 2
     I[I == 144] = 0 # erase background (background type 1)
     I[I == 109] = 0 # erase background (background type 2)
     I[I != 0] = 1 # everything else (paddles, ball) just set to 1
     return I.astype(np.float).ravel()
+    """
+
+
 
 class Agent_PG(Agent):
     def __init__(self, env, args):
@@ -62,7 +74,7 @@ class Agent_PG(Agent):
             torch.nn.Linear(H, D_out),
             torch.nn.Softmax(dim=-1)
         ).to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=3e-3)
         ##################
 
 
@@ -87,8 +99,13 @@ class Agent_PG(Agent):
         ##################
         # YOUR CODE HERE #
         # Test shape
-        #s = self.env.reset()
-        #o = prepro(s)
+        s = self.env.reset()
+        #print("s shape", s.shape)
+        o = prepro(s)
+        #o = o.reshape(80,80)
+        print("o shape", o.shape)
+        plt.imshow(o)
+        plt.show()
         #print("o shape", o.shape)
         #sample_action = self.make_action(o, test=True)
         #print("sample action", sample_action)
@@ -97,9 +114,7 @@ class Agent_PG(Agent):
         #plt.plot(range(10), range(10))
         #plt.savefig('f.png')
 
-
-
-
+        """
         NN = 1000
         episode_reward = np.array([])
         loss_history = np.array([])
@@ -205,7 +220,7 @@ class Agent_PG(Agent):
         plt.savefig('loss.png')
         plt.savefig('loss.pdf')
         ##################
-        
+        """
 
 
     def make_action(self, observation, test=True):
@@ -236,12 +251,8 @@ class Agent_PG(Agent):
                 #print("flatten_x shape", flatten_x.shape)
                 flatten_x = flatten_x.to(self.device)
                 outputs = self.model(flatten_x)
-                #sample_action = outputs.argmax()
-                #print("sample action",sample_action.item())
                 sample_action = outputs.cpu().numpy() 
-                #print("sample action", sample_action)
-                #return sample_action
-
+                print("sample action", sample_action)
                 action = np.random.choice(range(3), p=sample_action[0])
                 return int(action + 1)
         else :
