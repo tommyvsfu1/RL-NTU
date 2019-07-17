@@ -69,7 +69,7 @@ class Agent_PG(Agent):
         D_in, H, D_out = 80*80, 256, 3
         self.model = torch.nn.Sequential(
             torch.nn.Linear(D_in, H),
-            torch.nn.ReLu(),
+            torch.nn.ReLU(),
             torch.nn.Linear(H, D_out),
             torch.nn.LogSoftmax(dim=-1)
         ).to(self.device)
