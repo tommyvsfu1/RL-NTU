@@ -64,7 +64,9 @@ class Agent_PG(Agent):
         print("-- Debug -- ")
         print("def discount rewards: in debug_agent_pg.py : True")
         # Model : Neural Network
-        self.device = torch.device('cpu')
+        self.env = env
+        self.env.seed(seed)
+        self.device = torch.device('cuda')
         print("using device",self.device)
         D_in, H, D_out = 80*80, 256, 3
         self.model = torch.nn.Sequential(
