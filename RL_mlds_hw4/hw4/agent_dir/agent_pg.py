@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 import cv2
 import skimage
 
-
+seed = 9500
+np.random.seed(seed)
 
 def prepro(o,image_size=[80,80]):
     """
@@ -68,7 +69,7 @@ class Agent_PG(Agent):
         D_in, H, D_out = 80*80, 256, 3
         self.model = torch.nn.Sequential(
             torch.nn.Linear(D_in, H),
-            torch.nn.ReLU(),
+            torch.nn.ReLu(),
             torch.nn.Linear(H, D_out),
             torch.nn.LogSoftmax(dim=-1)
         ).to(self.device)
@@ -239,9 +240,9 @@ class Agent_PG(Agent):
         # YOUR CODE HERE #
         ##################
         # Feedforward of the Network
-        if test:
-            self.model.eval()
-            with torch.no_grad():
+
+        self.model.eval()
+        with torch.no_grad():
                 #print("observation shape", observation.shape)
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
                 x = torch.from_numpy(x) # numpy to tensor
@@ -254,17 +255,7 @@ class Agent_PG(Agent):
                 action_prob = np.exp(log_logits.cpu().numpy()[0]) 
                 action = np.random.choice(range(3), p=action_prob)
                 return int(action + 1)
-        else :
-            self.model.train()
-            #x = (torch.from_numpy(observation)).float()
-            x = observation
-            flatten_x = self.flatten(x)
-            #print("flatten shape", flatten_x.shape)
-            ### Device: CPU -> GPU
-            flatten_x = flatten_x.to(self.device)
-            ### Compute Loss and gradient
-            logits = self.model(flatten_x)
-            return logits
+
         
 
     def discount_reward(self, reward_tensor, t, Tn, discount_factor=0.99):
@@ -296,91 +287,6 @@ class Agent_PG(Agent):
         # revert back to the original order
         r = r[::-1].cumsum()[::-1]
         return r - r.mean()
-
-    def reinforce(self, num_episodes=2000,
-                batch_size=16, gamma=0.99):
-        loss_history = np.array([])
-        # Set up lists to hold results
-        total_rewards = []
-        batch_rewards = []
-        batch_actions = []
-        batch_states = []
-        batch_counter = 1
-
-        #action_space = np.arange(self.env.action_space.n)
-        #count = 0
-        for ep in range(num_episodes):
-            s_0 = prepro(self.env.reset())
-            states = []
-            rewards = []
-            actions = []
-            complete = False
-            while complete == False:
-                #print("++")
-                # Get actions and convert to numpy array
-                #count += 1
-                #self.debugger(s_0, count)
-                action = self.make_action(s_0)
-                s_1, r, complete, _ = self.env.step(action)
-                
-                states.append(s_0)
-                rewards.append(r)
-                actions.append(action)
-                s_0 = prepro(s_1)
-                
-                # If complete, batch data
-                if complete:
-                    batch_rewards.extend(self.discount_rewards(rewards, gamma))
-                    batch_states.extend(states)
-                    batch_actions.extend(actions)
-                    batch_counter += 1
-                    total_rewards.append(sum(rewards))
-                    #print("batch action",batch_actions)
-                    # If batch is complete, update network
-                    if batch_counter == batch_size:
-                        batch_rewards = np.array(batch_rewards)
-                        batch_states = np.array(batch_states)
-                        batch_actions = np.array(batch_actions)
-                        self.optimizer.zero_grad()
-                        state_tensor = torch.from_numpy((batch_states)).float()
-                        reward_tensor = torch.from_numpy((batch_rewards)).float()
-                        # Actions are used as indices, must be LongTensor
-                        action_tensor = torch.from_numpy((batch_actions)).long() - 1
-                        #print("action tensor", action_tensor)
-                        # Calculate loss
-                        logprob = torch.log(
-                            self.make_action(state_tensor,False))
-                        #print("logprob shape", logprob.shape)
-                        #print("reward_tensor", reward_tensor)
-                        #print("logprob", logprob[np.arange(len(action_tensor)), action_tensor])
-                        selected_logprobs = reward_tensor * \
-                            logprob[np.arange(len(action_tensor)), action_tensor]
-                        loss = -selected_logprobs.mean()
-                        # Calculate gradients
-                        loss.backward()
-                        # Apply gradients
-                        self.optimizer.step()
-                        
-                        batch_rewards = []
-                        batch_actions = []
-                        batch_states = []
-                        batch_counter = 1
-                        loss_history = np.append(loss_history, loss.item())
-                        
-                    # Print running average
-                    print("\rEp: {} Average of last 10: {:.2f}".format(
-                        ep + 1, np.mean(total_rewards[-10:])), end="")
-
-        #plt.plot(range(loss_history.shape[0]), loss_history)
-        #plt.show()
-        return total_rewards
-
-    
-    # custom weights initialization 
-    def weights_init(self,m):
-        classname = m.__class__.__name__
-        if classname.find('Linear') != -1:
-            m.weight.data.normal_(0.0, 0.02)
     
     def debugger(self, observation, count, action=5):
         '''
