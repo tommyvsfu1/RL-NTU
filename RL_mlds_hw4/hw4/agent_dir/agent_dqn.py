@@ -32,8 +32,13 @@ class Q_pi(torch.nn.Module):
         # ).to(self.device)
         self.conv1 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
         torch.nn.init.kaiming_normal_(self.conv1.weight)
-        self.fc2 = torch.nn.Linear((4*82*82), action_space_n)
-        torch.nn.init.kaiming_normal_(self.fc2.weight)       
+        self.conv2 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
+        torch.nn.init.kaiming_normal_(self.conv2.weight)
+        self.conv3 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
+        torch.nn.init.kaiming_normal_(self.conv3.weight)
+        
+        self.fc4 = torch.nn.Linear((4*78*78), action_space_n)
+        torch.nn.init.kaiming_normal_(self.fc4.weight)       
 
 
     def flatten(self, x):
@@ -47,23 +52,26 @@ class Q_pi(torch.nn.Module):
 
     def forward(self, x): # with epsilon greedy
         """
-        Feedforward + epsilon greedy
+        Feedforward 
             Input : torch.tensor : (N,84*84*4)
             Output : Q_fn(s,a) : (N,action_space_n=4)
         """
+        # do not use softmax in DQN !!!!!
+        # and remember don't use relu on lasy layers, since it somewhere means kill half of output values
         x = F.relu(self.conv1(x))
-        x = F.relu(self.fc2(self.flatten(x)))
-        y = F.softmax(x)
+        x = F.relu(self.conv2(x))
+        x = F.relu(self.conv3(x))
+        y = self.fc4(self.flatten(x))
         return y
         
     def epsilon_greedy(self, pred, epsilon):
         """
         Output : epsilon_greedy(argmax(Q_fn(x)),random(action_space)) 
         """
-        pred = pred.detach().numpy() # detach
+        pred = pred.detach() # detach
         pred = pred.reshape(-1)
         if random.random() > epsilon:
-            a = np.argmax(pred)
+            a = torch.argmax(pred)
         else :
             a = np.random.choice(range(4))
         return a
@@ -110,42 +118,44 @@ class Agent_DQN(Agent):
             print('loading trained model')
         ##################
         # YOUR CODE HERE #
-        self.device = torch.device('cpu')
+        self.device = torch.device('cuda')
+        print("Hardware Device info")
+        print("  using device:",self.device)
         print("Environment info:")
         print("  action space",self.env.get_action_space())
         print("  action space meaning:", self.env.get_meaning())
         print("  obeservation space",self.env.get_observation_space())
 
-        self.Q_fn = Q_pi(self.env.get_action_space().n, self.device)
-        self.Q_hat_fn = Q_pi(self.env.get_action_space().n, self.device)
+        self.Q_fn = Q_pi(self.env.get_action_space().n, self.device).to(device=self.device)
+        self.Q_hat_fn = Q_pi(self.env.get_action_space().n, self.device).to(device=self.device)
         self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
         self.Q_hat_fn.eval()
         self.replay_buffer = ReplayBuffer() 
         self.BATCH_SIZE = 32
         self.Q_epsilon = 1.0
         self.optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
-
-        # optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
-        # x = torch.zeros((10, 4, 84, 84), dtype=torch.float32)
-        # self.Q_fn.train()
-        # #x = prepro(np.zeros((84,84,4)))
+        """
+        optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
+        x = torch.zeros((10, 4, 84, 84), dtype=torch.float32)
+        self.Q_fn.train()
+         #x = prepro(np.zeros((84,84,4)))
         # #x = torch.from_numpy(x)
         # #x = expand_dim(x)
-        # scores = self.Q_fn(x)
-        # loss_fn = torch.nn.MSELoss()
-        # loss = loss_fn(scores, torch.zeros((10,4)))
-        # optimizer.zero_grad()
+        scores = self.Q_fn(x)
+        loss_fn = torch.nn.MSELoss()
+        loss = loss_fn(scores, torch.zeros((10,4)))
+        optimizer.zero_grad()
 
         # # This is the backwards pass: compute the gradient of the loss with
         # # respect to each  parameter of the model.
-        # loss.backward()
+        loss.backward()
 
         # # Actually update the parameters of the model using the gradients
         # # computed by the backwards pass.
-        # optimizer.step()
+        optimizer.step()
         # print("scores shape", scores.shape)
         ##################
-
+        """
     def init_game_setting(self):
         """
 
@@ -166,7 +176,7 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 10
+        NUM_EPISODES = 8000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
@@ -224,16 +234,10 @@ class Agent_DQN(Agent):
         transitions = self.replay_buffer.sample(self.BATCH_SIZE)
         batch = Transition(*zip(*transitions))
 
-        #non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
-        #                                    batch.next_state)), device=self.device, dtype=torch.uint8)
-        
-        
-        #non_final_next_states = torch.cat([s for s in batch.next_state
-        #                                            if s is not None])
-        state_batch = torch.cat(batch.state)
-        action_batch = torch.cat(batch.action)
-        reward_batch = torch.cat(batch.reward)
-        next_state_batch = torch.cat(batch.state)
+        state_batch = torch.cat(batch.state).to(self.device)
+        action_batch = torch.cat(batch.action).to(self.device)
+        reward_batch = torch.cat(batch.reward).to(self.device)
+        next_state_batch = torch.cat(batch.state).to(self.device)
 
     
         """ Q Network """
@@ -241,7 +245,6 @@ class Agent_DQN(Agent):
         # .gater will select the right index
         # reference : https://www.cnblogs.com/HongjianChen/p/9451526.html
         state_action_values = self.Q_fn(state_batch).gather(1, action_batch)
-
         """ Q_hat(Target) Network """
         # .max(1,keepdim=True)[0] return (N,1) vector 
         # same as below 
@@ -251,8 +254,12 @@ class Agent_DQN(Agent):
             next_state_values = self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
             expected_state_action_values = 0.9 * (next_state_values) + reward_batch
         elif improvment == "DDQN":
-            select_action_values = self.Q_fn(next_state_batch).max(1,keepdim=True)[0].detach()
-            next_state_values = (self.Q_hat_fn(next_state_batch).detach()).gather(1, select_action_values)
+            select_action_values = self.Q_fn(next_state_batch).detach()
+            #print("select action values", select_action_values)
+            select_action = torch.argmax(select_action_values, dim = 1, keepdim = True)
+            #print("select action", select_action)
+            next_state_values = self.Q_hat_fn(next_state_batch).detach()
+            next_state_values = next_state_values.gather(1, select_action)
             expected_state_action_values = 0.9 * (next_state_values) + reward_batch
 
 
@@ -280,7 +287,7 @@ class Agent_DQN(Agent):
         """
         ##################
         # YOUR CODE HERE #        
-        Q_s_a = self.Q_fn.forward(expand_dim(observation))
+        Q_s_a = self.Q_fn.forward(expand_dim(observation).to(self.device))
         a_0 = self.Q_fn.epsilon_greedy(Q_s_a, self.Q_epsilon)
         return a_0 
         ##################        
