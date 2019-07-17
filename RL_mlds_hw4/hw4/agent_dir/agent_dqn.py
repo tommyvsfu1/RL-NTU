@@ -166,7 +166,7 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 3000
+        NUM_EPISODES = 10000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
@@ -274,7 +274,7 @@ class Agent_DQN(Agent):
         ##################        
 
     def epsilon_decline(self, ep, NUM_EPISODES):
-        eps_threshold = 0.025 + ((1 - 0.025)*(ep / NUM_EPISODES))
+        eps_threshold = 0.025 + ((1 - 0.025)*(ep / 1500))
         return eps_threshold 
 
     def debug_observation_frame(self, count, observation):

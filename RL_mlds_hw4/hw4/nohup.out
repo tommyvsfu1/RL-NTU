@@ -1,0 +1,4101 @@
+Environment info:
+  action space Discrete(4)
+  action space meaning: ['NOOP', 'FIRE', 'RIGHT', 'LEFT']
+  obeservation space Box(84, 84, 4)
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 4.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 3.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 4.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 4.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 3.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 1.00
+Episode Reward: 1.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 0.00
+Episode Reward: 2.00
+Episode Reward: 0.00
