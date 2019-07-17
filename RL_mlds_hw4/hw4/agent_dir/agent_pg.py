@@ -21,24 +21,22 @@ def prepro(o,image_size=[80,80]):
         Grayscale image, shape: (80, 80, 1)
     
     """
-    
+
     # obsv : [210, 180, 3] HWC
     # preprocessing code is partially adopted from https://github.com/carpedm20/deep-rl-tensorflow
-    #y = 1 * o[:,:,0] + 1 * o[:,:,1] + 1 * o[:,:,2]
     y = 0.2126 * o[:, :, 0] + 0.7152 * o[:, :, 1] + 0.0722 * o[:, :, 2]
     y = y.astype(np.uint8)
     #Scipy actually requires WHC images, but it doesn't matter.
     resized = scipy.misc.imresize(y, image_size)
-    print("resized shape", resized.shape)
-    #return np.expand_dims(resized.astype(np.float32),axis=2)
-    return resized.astype(np.float32)
+    return np.expand_dims(resized.astype(np.float32),axis=2)
     """
-    I = I[35:195] # crop
-    I = I[::2,::2,0] # downsample by factor of 2
-    I[I == 144] = 0 # erase background (background type 1)
-    I[I == 109] = 0 # erase background (background type 2)
-    I[I != 0] = 1 # everything else (paddles, ball) just set to 1
-    return I.astype(np.float).ravel()
+    Karpathy method(I think this preprocessing is better than above)
+        I = I[35:195] # crop
+        I = I[::2,::2,0] # downsample by factor of 2
+        I[I == 144] = 0 # erase background (background type 1)
+        I[I == 109] = 0 # erase background (background type 2)
+        I[I != 0] = 1 # everything else (paddles, ball) just set to 1
+        return I.astype(np.float).ravel()
     """
 
 
@@ -72,9 +70,9 @@ class Agent_PG(Agent):
             torch.nn.Linear(D_in, H),
             torch.nn.ReLU(),
             torch.nn.Linear(H, D_out),
-            torch.nn.Softmax(dim=-1)
+            torch.nn.LogSoftmax(dim=-1)
         ).to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=3e-3)
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=3e-3)
         ##################
 
 
@@ -99,13 +97,15 @@ class Agent_PG(Agent):
         ##################
         # YOUR CODE HERE #
         # Test shape
-        s = self.env.reset()
+        #s = self.env.reset()
         #print("s shape", s.shape)
-        o = prepro(s)
+        #o = prepro(s)
         #o = o.reshape(80,80)
-        print("o shape", o.shape)
-        plt.imshow(o)
-        plt.show()
+        #print("o shape", o.shape)
+        #print(o)
+        #plt.imshow(o,cmap='gray',vmin=0,vmax=255)
+        #plt.show()
+
         #print("o shape", o.shape)
         #sample_action = self.make_action(o, test=True)
         #print("sample action", sample_action)
@@ -113,9 +113,8 @@ class Agent_PG(Agent):
         #print(pe.network(torch.FloatTensor(s)))
         #plt.plot(range(10), range(10))
         #plt.savefig('f.png')
-
-        """
-        NN = 1000
+        
+        NN = 8000
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
@@ -130,20 +129,23 @@ class Agent_PG(Agent):
                 s_0 = self.env.reset() # reset environment
                 s_0 = prepro(s_0)
                 s_shape = s_0.shape
-                sample_action = self.make_action(s_0)
+                sample_action = self.env.action_space.sample()
+                s_1, _, _, _ = self.env.step(sample_action)
+                s_1 = prepro(s_1)
                 while(True):
-                    observation_tensor.append(s_0)
-                    action = sample_action
+                    delta_state = s_1 - s_0
+                    s_0 = s_1              
+
+                    action = self.make_action(delta_state)
                     s_1, reward, done, info = self.env.step(action)
+                    s_1 = prepro(s_1)
                     # Store state
+                    observation_tensor.append(delta_state)
                     action_tensor = np.append(action_tensor, action)
                     reward_tensor = np.append(reward_tensor, reward)
                     
-                    # Sample Action (tau_theta(s))
-                    s_0 = prepro(s_1)
                     if s_0.shape != s_shape:
                         print("error", s_0.shape, s_shape)
-                    sample_action = self.make_action(s_0)
                     if done:
                         #print("Episode finished after {} timesteps".format(reward_tensor.shape[0]))
                         break
@@ -187,7 +189,7 @@ class Agent_PG(Agent):
             action_tensor = (torch.from_numpy(action_tensor).long()).to(self.device)
             advatange_function = advatange_function.to(self.device)
             ### Compute Loss and gradient
-            logits = self.model(flatten_x)
+            log_logits = self.model(flatten_x)
             
             #if no softmax
             #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
@@ -196,9 +198,9 @@ class Agent_PG(Agent):
             #loss = ( torch.dot(negative_log_likelihoods, advatange_function) ).sum() / N
             
             #else
-            logprob = torch.log(logits)
+            #logprob = torch.log(logits)
             selected_logprobs = advatange_function * \
-                            logprob[np.arange(len(action_tensor)), action_tensor]
+                            log_logits[np.arange(len(action_tensor)), action_tensor]
             loss = -selected_logprobs.mean()           
             self.optimizer.zero_grad()
             loss.backward()
@@ -216,11 +218,9 @@ class Agent_PG(Agent):
             
             #print(loss)
         plt.plot(range(NN),episode_reward)
-        #plt.show()
-        plt.savefig('loss.png')
-        plt.savefig('loss.pdf')
+        plt.savefig('pg_loss.png')
         ##################
-        """
+        
 
 
     def make_action(self, observation, test=True):
@@ -250,10 +250,9 @@ class Agent_PG(Agent):
                 flatten_x = self.flatten(x)
                 #print("flatten_x shape", flatten_x.shape)
                 flatten_x = flatten_x.to(self.device)
-                outputs = self.model(flatten_x)
-                sample_action = outputs.cpu().numpy() 
-                print("sample action", sample_action)
-                action = np.random.choice(range(3), p=sample_action[0])
+                log_logits = self.model(flatten_x)
+                action_prob = np.exp(log_logits.cpu().numpy()[0]) 
+                action = np.random.choice(range(3), p=action_prob)
                 return int(action + 1)
         else :
             self.model.train()
