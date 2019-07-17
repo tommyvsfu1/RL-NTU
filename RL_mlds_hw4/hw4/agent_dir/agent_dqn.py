@@ -71,7 +71,7 @@ class Q_pi(torch.nn.Module):
         pred = pred.detach() # detach
         pred = pred.reshape(-1)
         if random.random() > epsilon:
-            a = torch.argmax(pred)
+            a = torch.argmax(pred).item()
         else :
             a = np.random.choice(range(4))
         return a
@@ -176,7 +176,7 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 8000
+        NUM_EPISODES = 5000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
