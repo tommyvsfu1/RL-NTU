@@ -32,15 +32,17 @@ class Q_pi(torch.nn.Module):
         #     torch.nn.ReLU(),
         #     torch.nn.Linear(H, D_out), # output layer size = action space size
         # ).to(self.device)
-        self.conv1 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
+        self.conv1 = torch.nn.Conv2d(4,32,kernel_size=8,strides=[4,4],padding=0)
         torch.nn.init.kaiming_normal_(self.conv1.weight)
-        self.conv2 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
+        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,strides=[2,2],padding=0)
         torch.nn.init.kaiming_normal_(self.conv2.weight)
-        self.conv3 = torch.nn.Conv2d(4,4,kernel_size=3,padding=0)
+        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,strides=[1,1],padding=0)
         torch.nn.init.kaiming_normal_(self.conv3.weight)
         
-        self.fc4 = torch.nn.Linear((4*78*78), action_space_n)
-        torch.nn.init.kaiming_normal_(self.fc4.weight)       
+        self.fc4 = torch.nn.Linear((3136), 512)
+        self.fc5 = torch.nn.Linear((512), 4)
+        torch.nn.init.kaiming_normal_(self.fc4.weight)
+        torch.nn.init.kaiming_normal_(self.fc5.weight)
 
 
     def flatten(self, x):
@@ -63,7 +65,7 @@ class Q_pi(torch.nn.Module):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
-        y = self.fc4(self.flatten(x))
+        y = self.fc5(self.fc4(self.flatten(x)))
         return y
         
     def epsilon_greedy(self, pred, epsilon):
@@ -178,11 +180,11 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 5000
+        NUM_EPISODES = 50000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
-        LINEAR_DECLINE_STEP = 100000
+        LINEAR_DECLINE_STEP = 80000
         time_step = 0
         epsisode_history = []
         for episode in range(NUM_EPISODES):
@@ -255,7 +257,7 @@ class Agent_DQN(Agent):
         #   next_state_values[data] = argmax Q'(s_t+1, r_t)
         if improvment == "DQN":
             next_state_values = self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
-            expected_state_action_values = 0.9 * (next_state_values) + reward_batch
+            expected_state_action_values = 0.99 * (next_state_values) + reward_batch
         elif improvment == "DDQN":
             select_action_values = self.Q_fn(next_state_batch).detach()
             #print("select action values", select_action_values)
@@ -263,7 +265,7 @@ class Agent_DQN(Agent):
             #print("select action", select_action)
             next_state_values = self.Q_hat_fn(next_state_batch).detach()
             next_state_values = next_state_values.gather(1, select_action)
-            expected_state_action_values = 0.9 * (next_state_values) + reward_batch
+            expected_state_action_values = 0.99 * (next_state_values) + reward_batch
 
 
         """Regression"""
