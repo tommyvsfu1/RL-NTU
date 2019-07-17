@@ -49,7 +49,7 @@ class Q_pi(torch.nn.Module):
         """
         Feedforward + epsilon greedy
             Input : torch.tensor : (N,84*84*4)
-            Output : Q_fn(s,a) 
+            Output : Q_fn(s,a) : (N,action_space_n=4)
         """
         x = F.relu(self.conv1(x))
         x = F.relu(self.fc2(self.flatten(x)))
@@ -166,16 +166,19 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 10000
+        NUM_EPISODES = 10
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
+        LINEAR_DECLINE_STEP = 1000000
+        time_step = 0
         epsisode_history = []
         for episode in range(NUM_EPISODES):
             s_0 = torch.from_numpy(prepro(self.env.reset()))
             episode_reward = 0
             while(True):
                 self.Q_fn.eval()
+                time_step += 1
                 a_0 = self.make_action(s_0) # select action using epsilon greedy
                 s_1, r_0, done, info =  self.env.step(a_0)
                 episode_reward += r_0
@@ -196,20 +199,21 @@ class Agent_DQN(Agent):
 
                 # optimize Q model
                 if len(self.replay_buffer) % UPDATE_FREQUENCY == 0:        
-                    self.optimize_model()
+                    self.optimize_model("DDQN")
                 
                 # update  Q' model
                 if episode % TARGET_UPDATE_C == 0:
                     self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
+                
+                self.Q_epsilon = self.epsilon_decline(time_step,LINEAR_DECLINE_STEP)
             epsisode_history.append(episode_reward)
-            self.Q_epsilon = self.epsilon_decline(episode + 1, NUM_EPISODES)
             print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         plt.plot(range(len(epsisode_history)), epsisode_history)
         plt.savefig('reward_history.png')
         ##################
         
 
-    def optimize_model(self):
+    def optimize_model(self, improvment):
         if len(self.replay_buffer) < self.BATCH_SIZE:
             return 
 
@@ -230,19 +234,27 @@ class Agent_DQN(Agent):
         action_batch = torch.cat(batch.action)
         reward_batch = torch.cat(batch.reward)
         next_state_batch = torch.cat(batch.state)
-        """Q Network"""
-        # self.Q_fn(state_batch) return (N,(action space))
+
+    
+        """ Q Network """
+        # self.Q_fn(state_batch) return (N,action space_n=4)
         # .gater will select the right index
         # reference : https://www.cnblogs.com/HongjianChen/p/9451526.html
         state_action_values = self.Q_fn(state_batch).gather(1, action_batch)
 
-        """Q_hat(Target) Network"""
+        """ Q_hat(Target) Network """
         # .max(1,keepdim=True)[0] return (N,1) vector 
         # same as below 
         # for data in range(batch):
         #   next_state_values[data] = argmax Q'(s_t+1, r_t)
-        next_state_values = self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
-        expected_state_action_values = (next_state_values) + reward_batch
+        if improvment == "DQN":
+            next_state_values = self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
+            expected_state_action_values = 0.9 * (next_state_values) + reward_batch
+        elif improvment == "DDQN":
+            select_action_values = self.Q_fn(next_state_batch).max(1,keepdim=True)[0].detach()
+            next_state_values = (self.Q_hat_fn(next_state_batch).detach()).gather(1, select_action_values)
+            expected_state_action_values = 0.9 * (next_state_values) + reward_batch
+
 
         """Regression"""
         loss_fn = torch.nn.MSELoss()
@@ -273,8 +285,14 @@ class Agent_DQN(Agent):
         return a_0 
         ##################        
 
-    def epsilon_decline(self, ep, NUM_EPISODES):
-        eps_threshold = 0.025 + ((1 - 0.025)*(ep / 1500))
+    def epsilon_decline(self, t, step):
+        if t <= step:
+            eps_threshold = 1 - (0.975 *(t / step))
+        else :
+            eps_threshold = 0.025
+        
+        if eps_threshold < 0.025:
+            eps_threshold = 0.025
         return eps_threshold 
 
     def debug_observation_frame(self, count, observation):
