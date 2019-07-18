@@ -68,7 +68,7 @@ class Q_pi(torch.nn.Module):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
-        y = F.relu(self.fc4(self.flatten(x))) # pluease add relu layer
+        y = F.relu(self.fc4(self.flatten(x))) # please add relu layer
         y = self.fc5(y)
         return y
         
@@ -185,17 +185,18 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 30000
+        NUM_EPISODES = 80000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
         LINEAR_DECLINE_STEP = 80000
+        MAX_STEP = 10000
         time_step = 0
         epsisode_history = []
         for episode in range(NUM_EPISODES):
             s_0 = torch.from_numpy(prepro(self.env.reset()))
             episode_reward = 0
-            while(True):
+            for _ in range(MAX_STEP):
                 self.Q_fn.eval()
                 time_step += 1
                 a_0 = self.make_action(s_0) # select action using epsilon greedy
