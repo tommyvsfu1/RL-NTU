@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import cv2
 import skimage
 
-seed = 9500
+seed = 9487
 np.random.seed(seed)
 
 
@@ -190,7 +190,7 @@ class Agent_PG(Agent):
         
         # Model : Neural Network
         self.device = torch.device('cuda')
-        print("using device",self.device)
+        print("Device...  ",self.device)
         D_in, H, D_out = 80*80, 256, 3
         self.model = torch.nn.Sequential(
             torch.nn.Linear(D_in, H),
@@ -240,7 +240,7 @@ class Agent_PG(Agent):
         #plt.plot(range(10), range(10))
         #plt.savefig('f.png')
         
-        NN = 8000
+        NN = 1000
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
@@ -254,7 +254,6 @@ class Agent_PG(Agent):
             for i_episode in range(N):  # each (episode)
                 s_0 = self.env.reset() # reset environment
                 s_0 = prepro(s_0)
-                s_shape = s_0.shape
                 sample_action = self.env.action_space.sample()
                 s_1, _, _, _ = self.env.step(sample_action)
                 s_1 = prepro(s_1)
@@ -270,8 +269,6 @@ class Agent_PG(Agent):
                     action_tensor = np.append(action_tensor, action)
                     reward_tensor = np.append(reward_tensor, reward)
                     
-                    if s_0.shape != s_shape:
-                        print("error", s_0.shape, s_shape)
                     if done:
                         #print("Episode finished after {} timesteps".format(reward_tensor.shape[0]))
                         break
@@ -292,7 +289,7 @@ class Agent_PG(Agent):
             #reward_tensor = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-10) # normalization
             #b = np.sum(reward_tensor) / reward_tensor.shape[0] # expectation of reward
             #advatange_function = (torch.from_numpy(reward_tensor - b)).float()
-            advatange_function = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-10)
+            advatange_function = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-5)
             advatange_function =  (torch.from_numpy(advatange_function)).float()
             total_rewards.append(total_reward)
 
@@ -327,7 +324,7 @@ class Agent_PG(Agent):
             #logprob = torch.log(logits)
             selected_logprobs = advatange_function * \
                             log_logits[np.arange(len(action_tensor)), action_tensor]
-            loss = -selected_logprobs.mean()           
+            loss = (-selected_logprobs.mean())           
             self.optimizer.zero_grad()
             loss.backward()
             
