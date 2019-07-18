@@ -24,7 +24,7 @@ class Memory:
         del self.logprobs[:]
         del self.rewards[:]
 
-class ActorCritic(nn.Module):
+class ActorCritic(torch.nn.Module):
     def __init__(self, state_dim, action_dim, n_latent_var):
         super(ActorCritic, self).__init__()
         self.affine = torch.nn.Linear(state_dim, n_latent_var)
