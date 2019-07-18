@@ -130,7 +130,7 @@ class PPO:
         self.policy_old.load_state_dict(self.policy.state_dict())
         
 
-def prepro(o,image_size=[80,80]):
+def prepro(I,image_size=[80,80]):
     """
     Call this function to preprocess RGB image to grayscale image if necessary
     This preprocessing code is from
@@ -142,7 +142,7 @@ def prepro(o,image_size=[80,80]):
         Grayscale image, shape: (80, 80, 1)
     
     """
-
+    """
     # obsv : [210, 180, 3] HWC
     # preprocessing code is partially adopted from https://github.com/carpedm20/deep-rl-tensorflow
     y = 0.2126 * o[:, :, 0] + 0.7152 * o[:, :, 1] + 0.0722 * o[:, :, 2]
@@ -150,15 +150,16 @@ def prepro(o,image_size=[80,80]):
     #Scipy actually requires WHC images, but it doesn't matter.
     resized = scipy.misc.imresize(y, image_size)
     return np.expand_dims(resized.astype(np.float32),axis=2)
-    """
-    Karpathy method(I think this preprocessing is better than above)
-        I = I[35:195] # crop
-        I = I[::2,::2,0] # downsample by factor of 2
-        I[I == 144] = 0 # erase background (background type 1)
-        I[I == 109] = 0 # erase background (background type 2)
-        I[I != 0] = 1 # everything else (paddles, ball) just set to 1
-        return I.astype(np.float).ravel()
-    """
+    """    
+
+    #Karpathy method(I think this preprocessing is better than above)
+    I = I[35:195] # crop
+    I = I[::2,::2,0] # downsample by factor of 2
+    I[I == 144] = 0 # erase background (background type 1)
+    I[I == 109] = 0 # erase background (background type 2)
+    I[I != 0] = 1 # everything else (paddles, ball) just set to 1
+    return I.astype(np.float).ravel()
+    
 
 
 class Agent_PG(Agent):
@@ -192,14 +193,14 @@ class Agent_PG(Agent):
         # Model : Neural Network
         self.device = torch.device('cuda')
         print("Device...  ",self.device)
-        D_in, H, D_out = 80*80, 256, 3
+        D_in, H, D_out = 80*80, 256, 2
         self.model = torch.nn.Sequential(
             torch.nn.Linear(D_in, H),
             torch.nn.ReLU(),
             torch.nn.Linear(H, D_out),
             torch.nn.LogSoftmax(dim=-1)
         ).to(self.device)
-        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=3e-3)
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=1e-3)
         ##################
 
 
@@ -251,28 +252,26 @@ class Agent_PG(Agent):
             action_tensor = np.array([]) # since action is integer, use numpy directly to store action
             reward_tensor = np.array([]) # since reward is integer, use numpy directly to store reward
         
-            N = 1
-            for i_episode in range(N):  # each (episode)
-                s_0 = self.env.reset() # reset environment
-                s_0 = prepro(s_0)
-                sample_action = self.env.action_space.sample()
-                s_1, _, _, _ = self.env.step(sample_action)
-                s_1 = prepro(s_1)
-                while(True):
-                    delta_state = s_1 - s_0
-                    s_0 = s_1              
+            s_0 = self.env.reset() # reset environment
+            s_0 = prepro(s_0)
+            sample_action = self.env.action_space.sample()
+            s_1, _, _, _ = self.env.step(sample_action)
+            s_1 = prepro(s_1)
+            while(True):
+                delta_state = s_1 - s_0
+                s_0 = s_1              
 
-                    action = self.make_action(delta_state)
-                    s_1, reward, done, info = self.env.step(action)
-                    s_1 = prepro(s_1)
-                    # Store state
-                    observation_tensor.append(delta_state)
-                    action_tensor = np.append(action_tensor, action)
-                    reward_tensor = np.append(reward_tensor, reward)
+                action = self.make_action(delta_state)
+                s_1, reward, done, info = self.env.step(action)
+                s_1 = prepro(s_1)
+                # Store state
+                observation_tensor.append(delta_state)
+                action_tensor = np.append(action_tensor, action)
+                reward_tensor = np.append(reward_tensor, reward)
                     
-                    if done:
-                        #print("Episode finished after {} timesteps".format(reward_tensor.shape[0]))
-                        break
+                if done:
+                    print("Episode finished after {} timesteps".format(reward_tensor.shape[0]))
+                    break
             #print("type:", observation_tensor)
             #observation_tensor = np.array(observation_tensor,dtype=np.float64)
             #print("observation tensor shape", observation_tensor.shape)
@@ -296,7 +295,7 @@ class Agent_PG(Agent):
 
 
             # action tensor prepro
-            action_tensor -= 1
+            action_tensor -= 2
 
 
             # gradient  (reference : p.29 http://rll.berkeley.edu/deeprlcourse/f17docs/lecture_4_policy_gradient.pdf)
@@ -376,8 +375,8 @@ class Agent_PG(Agent):
                 flatten_x = flatten_x.to(self.device)
                 log_logits = self.model(flatten_x)
                 action_prob = np.exp(log_logits.cpu().numpy()[0]) 
-                action = np.random.choice(range(3), p=action_prob)
-                return int(action + 1)
+                action = np.random.choice(range(2), p=action_prob)
+                return int(action + 2)
 
         
 
