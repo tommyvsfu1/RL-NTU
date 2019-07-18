@@ -6,10 +6,18 @@ import torch
 import matplotlib.pyplot as plt
 import cv2
 import skimage
-
+import torch.nn.functional as F  # useful stateless functions
 seed = 9487
 np.random.seed(seed)
 
+def flatten(x):
+    """
+    Flatten image for FC layers
+        Input : Image (N,84,84,4)
+        Output : torch.tensor : (N,84*84*4)
+    """
+    N = x.shape[0] # read in N, C, H, W
+    return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
 
 class Memory:
     def __init__(self):
@@ -26,70 +34,78 @@ class Memory:
 
 class ActorCritic(torch.nn.Module):
     def __init__(self, state_dim, action_dim, n_latent_var):
-        super(ActorCritic, self).__init__()
-        self.affine = torch.nn.Linear(state_dim, n_latent_var)
+        super(ActorCritic, self).__init__()        
+        self.conv1 = torch.nn.Conv2d(1,32,kernel_size=8,stride=[4,4],padding=0)
+        torch.nn.init.kaiming_normal_(self.conv1.weight)
+        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,stride=[2,2],padding=0)
+        torch.nn.init.kaiming_normal_(self.conv2.weight)
+        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,stride=[1,1],padding=0)
+        torch.nn.init.kaiming_normal_(self.conv3.weight)
         
         # actor
-        self.action_layer = torch.nn.Sequential(
-                torch.nn.Linear(state_dim, n_latent_var),
-                torch.nn.Tanh(),
-                torch.nn.Linear(n_latent_var, n_latent_var),
-                torch.nn.Tanh(),
-                torch.nn.Linear(n_latent_var, action_dim),
-                torch.nn.Softmax(dim=-1)
-                )
+        self.fc4 = torch.nn.Linear((2304), 512)
+        self.fc5 = torch.nn.Linear((512), 2)
+        torch.nn.init.kaiming_normal_(self.fc4.weight)
+        torch.nn.init.kaiming_normal_(self.fc5.weight)
+        self.actor_layer = torch.nn.LogSoftmax(dim=-1)
         
-        # critic
-        self.value_layer = torch.nn.Sequential(
-                torch.nn.Linear(state_dim, n_latent_var),
-                torch.nn.Tanh(),
-                torch.nn.Linear(n_latent_var, n_latent_var),
-                torch.nn.Tanh(),
-                torch.nn.Linear(n_latent_var, 1)
-                )
-        
-    def forward(self):
-        raise NotImplementedError
-        
-    def act(self, state, memory): # PI
-        state = torch.from_numpy(state).float().to(device) 
-        action_probs = self.action_layer(state)
-        dist = torch.distributions.Categorical(action_probs)
-        action = dist.sample()
-        
-        memory.states.append(state)
-        memory.actions.append(action)
-        memory.logprobs.append(dist.log_prob(action))
-        
-        return action.item()
-    
-    def evaluate(self, state, action): # V(s)
-        action_probs = self.action_layer(state)
-        dist = torch.distributions.Categorical(action_probs)
-        
-        action_logprobs = dist.log_prob(action)
-        dist_entropy = dist.entropy()
-        
-        state_value = self.value_layer(state)
-        
-        return action_logprobs, torch.squeeze(state_value), dist_entropy
+        # critic 
+        self.fc6 = torch.nn.Linear((512), 1)
+        torch.nn.init.kaiming_normal_(self.fc6.weight)
+
+    def forward(self, x):
+        c1 = F.relu(self.conv1(x))
+        c2 = F.relu(self.conv2(c1))
+        c3 = F.relu(self.conv3(c2))
+        f4 = F.relu(self.fc4(flatten(c3)))
+        critic_value = self.fc6(f4)
+        policy_value = self.actor_layer(self.fc5(f4))
+
+        return policy_value, critic_value
+
+
     
 
-class PPO:
-    def __init__(self, state_dim, action_dim, n_latent_var, lr, betas, gamma, K_epochs, eps_clip):
+class PPO():
+    def __init__(self, device, state_dim, action_dim, n_latent_var, lr, gamma, K_epochs, eps_clip):
+        self.device = device
         self.lr = lr
-        self.betas = betas
         self.gamma = gamma
         self.eps_clip = eps_clip
         self.K_epochs = K_epochs
         
         self.policy = ActorCritic(state_dim, action_dim, n_latent_var).to(device)
-        self.optimizer = torch.optim.Adam(self.policy.parameters(),
-                                              lr=lr, betas=betas)
         self.policy_old = ActorCritic(state_dim, action_dim, n_latent_var).to(device)
-        
+        self.policy_old.load_state_dict(self.policy.state_dict())
+        self.policy_old.eval()
+        self.optimizer = torch.optim.Adam(self.policy.parameters(),lr=lr)
+
         self.MseLoss = torch.nn.MSELoss()
+
+
+    def act(self, state, memory): # action choosing
+        state_expand = torch.from_numpy(np.expand_dims(state,0)).float().to(self.device) 
+
+        logits, _ = self.policy_old(state_expand)
+
+        action_probs = torch.exp(logits)
+        dist = torch.distributions.Categorical(action_probs)
+        action = dist.sample()
+        
+        memory.states.append(torch.from_numpy(state).float())
+        memory.actions.append(action)
+        memory.logprobs.append(dist.log_prob(action))
+        return action.item()
     
+    def evaluate(self, state, action): # prepare for PPO Loss
+        logits, values = self.policy(state)
+        action_probs = torch.exp(logits)
+        dist = torch.distributions.Categorical(action_probs) 
+        action_logprobs = dist.log_prob(action)
+        dist_entropy = dist.entropy()
+                
+        return action_logprobs, torch.squeeze(values), dist_entropy
+
     def update(self, memory):   
         # Monte Carlo estimate of state rewards:
         rewards = []
@@ -99,18 +115,18 @@ class PPO:
             rewards.insert(0, discounted_reward)
         
         # Normalizing the rewards:
-        rewards = torch.tensor(rewards).to(device)
+        rewards = torch.tensor(rewards).to(self.device)
         rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-5)
         
         # convert list to tensor
-        old_states = torch.stack(memory.states).to(device).detach()
-        old_actions = torch.stack(memory.actions).to(device).detach()
-        old_logprobs = torch.stack(memory.logprobs).to(device).detach()
-        
+        old_states = torch.stack(memory.states).to(self.device).detach()  
+        old_actions = torch.stack(memory.actions).to(self.device).detach()
+        old_logprobs = torch.stack(memory.logprobs).to(self.device).detach()
+      
         # Optimize policy for K epochs:
         for _ in range(self.K_epochs):
             # Evaluating old actions and values :
-            logprobs, state_values, dist_entropy = self.policy.evaluate(old_states, old_actions)
+            logprobs, state_values, dist_entropy = self.evaluate(old_states, old_actions)
             
             # Finding the ratio (pi_theta / pi_theta__old):
             ratios = torch.exp(logprobs - old_logprobs.detach())
@@ -129,8 +145,6 @@ class PPO:
         # Copy new weights into old policy:
         self.policy_old.load_state_dict(self.policy.state_dict())
         
-    def optimize_model(self):
-        pass
 def prepro(I,image_size=[80,80]):
     """
     Call this function to preprocess RGB image to grayscale image if necessary
@@ -159,7 +173,9 @@ def prepro(I,image_size=[80,80]):
     I[I == 144] = 0 # erase background (background type 1)
     I[I == 109] = 0 # erase background (background type 2)
     I[I != 0] = 1 # everything else (paddles, ball) just set to 1
-    return I.astype(np.float).ravel()
+
+
+    return (np.expand_dims(I.astype(np.float),2)).transpose((2, 0, 1))
     
 
 
@@ -192,25 +208,10 @@ class Agent_PG(Agent):
         
         
         # Model : Neural Network
-        self.device = torch.device('cuda')
+        self.device = torch.device('cpu')
         print("Device...  ",self.device)
-
-        self.improvement = "PG"
-        D_in, H, D_out = 80*80, 256, 2
-        self.policy = torch.nn.Sequential(
-            torch.nn.Linear(D_in, H),
-            torch.nn.ReLU(),
-            torch.nn.Linear(H, D_out),
-            torch.nn.LogSoftmax(dim=-1)
-        ).to(self.device)
-        self.policy_old = torch.nn.Sequential(
-            torch.nn.Linear(D_in, H),
-            torch.nn.ReLU(),
-            torch.nn.Linear(H, D_out),
-            torch.nn.LogSoftmax(dim=-1)
-        ).to(self.device)
-        self.policy_old.load_state_dict(self.policy.state_dict())
-        self.optimizer = torch.optim.RMSprop(self.policy.parameters(), lr=1e-3)
+        self.net = PPO(self.device, 80*80, 2, 256, 1e-3, 0.99, 4, 0.2)
+        self.memory = Memory()
         ##################
 
 
@@ -221,10 +222,6 @@ class Agent_PG(Agent):
         Put anything you want to initialize if necessary
 
         """
-        ##################
-        # YOUR CODE HERE #
-
-        ##################
         pass
 
 
@@ -259,12 +256,7 @@ class Agent_PG(Agent):
         total_rewards = []
         for episode in range(NN):
             # Collect Data (s,a,r)
-            observation_tensor = [] # use list to store image, then convert to numpy
-            action_tensor = np.array([]) # since action is integer, use numpy directly to store action
-            reward_tensor = np.array([]) # since reward is integer, use numpy directly to store reward
-            logprob_tensor = np.array([])
-            s_0 = self.env.reset() # reset environment
-            s_0 = prepro(s_0)
+            s_0 = prepro(self.env.reset()) # reset environment
             sample_action = self.env.action_space.sample()
             s_1, _, _, _ = self.env.step(sample_action)
             s_1 = prepro(s_1)
@@ -272,126 +264,34 @@ class Agent_PG(Agent):
                 delta_state = s_1 - s_0
                 s_0 = s_1              
 
-                action, logprob = self.make_action(delta_state) # logprob is for PPO
+                action = self.make_action(delta_state) # logprob is for PPO
                 s_1, reward, done, info = self.env.step(action)
                 s_1 = prepro(s_1)
                 
                 # Store state
-                observation_tensor.append(delta_state)
-                action_tensor = np.append(action_tensor, action)
-                reward_tensor = np.append(reward_tensor, reward)
-                logprob_tensor = np.append(logprob_tensor, logprob) # logprob tensor are for PPO
+                self.memory.rewards.append(reward)
 
                 if done:
-                    print("Episode finished after {} timesteps".format(reward_tensor.shape[0]))
                     break
-            
-            total_reward = np.sum(reward_tensor)
-            episode_reward = np.append(episode_reward, total_reward)
-            # Discount and Normalize rewards
-            Tn = reward_tensor.shape[0]
-            reward_tensor = self.karparthy_discount_reward(reward_tensor)
-            #for t in range(Tn):
-            #    reward_tensor[t] = self.discount_reward(reward_tensor, t, Tn) 
-            #reward_tensor = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-10) # normalization
-            #b = np.sum(reward_tensor) / reward_tensor.shape[0] # expectation of reward
-            #advatange_function = (torch.from_numpy(reward_tensor - b)).float()
-            advantage_function = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-5)
-            advantage_function =  (torch.from_numpy(advantage_function)).float()
+
+            total_reward = np.sum(self.memory.rewards)
             total_rewards.append(total_reward)
+            episode_reward = np.append(episode_reward, total_reward)
 
-
-            # action tensor prepro
-            action_tensor -= 2
 
             # update
-            if self.improvement == "PG":
-                self.vanilla_update(observation_tensor, action_tensor, advantage_function)
-            elif self.improvement == "PPO" :
-                self.ppo_update(observation_tensor, action_tensor, logprob_tensor, advantage_function)
-
+            self.net.update(self.memory)
+            
+            # clear
+            self.memory.clear_memory()
             
             # record
             print("\rEp: {} Average of last 10: {:.2f}".format(
                 episode + 1, np.mean(total_rewards[-30:])), end="")    
         plt.plot(range(NN),episode_reward)
-        plt.savefig('pg_loss.png')
+        plt.savefig('ppo_loss.png')
         ##################
-
-
-    def ppo(self):
-        pass
-
-
-    def vanilla_update(self, observation_tensor, action_tensor, advantage_function):
-        # gradient  (reference : p.29 http://rll.berkeley.edu/deeprlcourse/f17docs/lecture_4_policy_gradient.pdf)
-        self.policy.train()
-        if type(observation_tensor) == type(list()): # if use list to tensor
-            #print("observation shape", len(observation_tensor))
-            x = torch.FloatTensor(observation_tensor)
-            #print("tensor x shape", x.shape)
-        else : # if use nupmy array
-            x = (torch.from_numpy(observation_tensor)).float()
-        flatten_x = self.flatten(x)
-        ### Device: CPU -> GPU
-        flatten_x = flatten_x.to(self.device)
-        action_tensor = (torch.from_numpy(action_tensor).long()).to(self.device)
-        advantage_function = advantage_function.to(self.device)
-        ### Compute Loss and gradient
-        log_logits = self.policy(flatten_x)
-        
-        #if no softmax
-        #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
-        #negative_log_likelihoods = negative_log_likelihoods_fn(logits, action_tensor - 1) # loss = (Tn,)
-        #print("negative log likelihoods", negative_log_likelihoods)
-        #loss = ( torch.dot(negative_log_likelihoods, advantage_function) ).sum() / N
-        
-        #else
-        #logprob = torch.log(logits)
-        selected_logprobs = advantage_function * \
-                        log_logits[np.arange(len(action_tensor)), action_tensor]
-        loss = (-selected_logprobs.mean())           
-        self.optimizer.zero_grad()
-        loss.backward()
-        
-                    
-        # Update theta 
-        # Note : 
-        # argmin -log(likelihood) = argmax log(likelihood)
-        # that is, gradient descent of -log(likelihood) is equivalent to gradient ascent of log(likelihood)
-        # we can call pytorch step() function, just like usual deep learning problem !
-        self.optimizer.step()
-
-    def ppo_update(self, observation_tensor, action_tensor, logprob_tensor, advantage_function):   
-
-        
-        # convert list and numpy to tensor
-        old_states = torch.FloatTensor(observation_tensor).to(self.device).detach()
-        old_actions = (torch.from_numpy(action_tensor).long()).to(self.device).detach()
-        old_logprobs = (torch.from_numpy(logprob_tensor)).to(self.device).detach()
-        
-        # Optimize policy for K epochs:
-        for _ in range(self.K_epochs):
-            # Evaluating old actions and values :
-            logprobs, state_values, dist_entropy = self.policy.evaluate(old_states, old_actions)
-            
-            # Finding the ratio (pi_theta / pi_theta__old):
-            ratios = torch.exp(logprobs - old_logprobs.detach())
-                
-            # Finding Surrogate Loss:
-            advantages = rewards - state_values.detach()
-            surr1 = ratios * advantages
-            surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
-            loss = -torch.min(surr1, surr2) + 0.5*self.MseLoss(state_values, rewards) - 0.01*dist_entropy
-            
-            # take gradient step
-            self.optimizer.zero_grad()
-            loss.mean().backward()
-            self.optimizer.step()
-        
-        # Copy new weights into old policy:
-        self.policy_old.load_state_dict(self.policy.state_dict())    
-
+ 
 
     def make_action(self, observation, test=True):
         """
@@ -409,32 +309,9 @@ class Agent_PG(Agent):
         # YOUR CODE HERE #
         ##################
         # Feedforward of the Network
-        
-        if self.improvement == "PG":
-            self.policy.eval()
-            with torch.no_grad():
-                x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
-                x = torch.from_numpy(x) # numpy to tensor
-                x = x.float() # type conversion
-                flatten_x = self.flatten(x)
-                flatten_x = flatten_x.to(self.device)
-                log_logits = self.policy(flatten_x)
-                action_prob = np.exp(log_logits.cpu().numpy()[0]) 
-                action = np.random.choice(range(2), p=action_prob)
-                return int(action + 2)
-        elif self.improvement == "PPO":
-            self.policy_old.eval()
-            with torch.no_grad():
-                x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
-                x = torch.from_numpy(x) # numpy to tensor
-                x = x.float() # type conversion
-                flatten_x = self.flatten(x)
-                flatten_x = flatten_x.to(self.device)
-                logits = self.policy_old(flatten_x)
-                action_probs = np.exp(logits.cpu().numpy()[0]) 
-                dist = torch.distributions.Categorical(action_probs)
-                action = dist.sample()       
-                return int(action.item() + 2), dist.log_prob(action)
+        with torch.no_grad():
+            action = self.net.act(observation, self.memory)
+            return int(action + 2)
         
 
     def discount_reward(self, reward_tensor, t, Tn, discount_factor=0.99):
