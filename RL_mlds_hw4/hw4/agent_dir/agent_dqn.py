@@ -227,7 +227,7 @@ class Agent_DQN(Agent):
                 
                 self.Q_epsilon = self.epsilon_decline(time_step, LINEAR_DECLINE_STEP)
             epsisode_history.append(episode_reward)
-            print("episode",episode,"episode reward",np.mean(epsisode_history[-100:]),"time_step",time_step,"epsilon",self.Q_epsilon)
+            print("episode",episode,"average 100 reward",np.mean(epsisode_history[-100:]),"time_step",time_step,"epsilon",self.Q_epsilon)
             #print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         plt.plot(range(len(epsisode_history)), epsisode_history)
         plt.savefig('reward_history.png')
