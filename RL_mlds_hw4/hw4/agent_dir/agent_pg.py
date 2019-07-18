@@ -129,7 +129,47 @@ class PPO:
         # Copy new weights into old policy:
         self.policy_old.load_state_dict(self.policy.state_dict())
         
+    def optimize_model(self):
+            # gradient  (reference : p.29 http://rll.berkeley.edu/deeprlcourse/f17docs/lecture_4_policy_gradient.pdf)
+            self.model.train()
+            if type(observation_tensor) == type(list()): # if use list to tensor
+                #print("observation shape", len(observation_tensor))
+                x = torch.FloatTensor(observation_tensor)
+                #print("tensor x shape", x.shape)
+            else : # if use nupmy array
+                x = (torch.from_numpy(observation_tensor)).float()
+            flatten_x = self.flatten(x)
+            ### Device: CPU -> GPU
+            flatten_x = flatten_x.to(self.device)
+            action_tensor = (torch.from_numpy(action_tensor).long()).to(self.device)
+            advatange_function = advatange_function.to(self.device)
+            ### Compute Loss and gradient
+            log_logits = self.model(flatten_x)
+            
+            #if no softmax
+            #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
+            #negative_log_likelihoods = negative_log_likelihoods_fn(logits, action_tensor - 1) # loss = (Tn,)
+            #print("negative log likelihoods", negative_log_likelihoods)
+            #loss = ( torch.dot(negative_log_likelihoods, advatange_function) ).sum() / N
+            
+            #else
+            #logprob = torch.log(logits)
+            selected_logprobs = advatange_function * \
+                            log_logits[np.arange(len(action_tensor)), action_tensor]
+            loss = (-selected_logprobs.mean())           
+            self.optimizer.zero_grad()
+            loss.backward()
+            
+                        
+            # Update theta 
+            # Note : 
+            # argmin -log(likelihood) = argmax log(likelihood)
+            # that is, gradient descent of -log(likelihood) is equivalent to gradient ascent of log(likelihood)
+            # we can call pytorch step() function, just like usual deep learning problem !
+            self.optimizer.step()
 
+            print("\rEp: {} Average of last 10: {:.2f}".format(
+            episode + 1, np.mean(total_rewards[-30:])), end="")
 def prepro(I,image_size=[80,80]):
     """
     Call this function to preprocess RGB image to grayscale image if necessary
@@ -257,7 +297,7 @@ class Agent_PG(Agent):
             sample_action = self.env.action_space.sample()
             s_1, _, _, _ = self.env.step(sample_action)
             s_1 = prepro(s_1)
-            while(True):
+            for frame in range(19000)
                 delta_state = s_1 - s_0
                 s_0 = s_1              
 
@@ -298,46 +338,7 @@ class Agent_PG(Agent):
             action_tensor -= 2
 
 
-            # gradient  (reference : p.29 http://rll.berkeley.edu/deeprlcourse/f17docs/lecture_4_policy_gradient.pdf)
-            self.model.train()
-            if type(observation_tensor) == type(list()): # if use list to tensor
-                #print("observation shape", len(observation_tensor))
-                x = torch.FloatTensor(observation_tensor)
-                #print("tensor x shape", x.shape)
-            else : # if use nupmy array
-                x = (torch.from_numpy(observation_tensor)).float()
-            flatten_x = self.flatten(x)
-            ### Device: CPU -> GPU
-            flatten_x = flatten_x.to(self.device)
-            action_tensor = (torch.from_numpy(action_tensor).long()).to(self.device)
-            advatange_function = advatange_function.to(self.device)
-            ### Compute Loss and gradient
-            log_logits = self.model(flatten_x)
-            
-            #if no softmax
-            #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
-            #negative_log_likelihoods = negative_log_likelihoods_fn(logits, action_tensor - 1) # loss = (Tn,)
-            #print("negative log likelihoods", negative_log_likelihoods)
-            #loss = ( torch.dot(negative_log_likelihoods, advatange_function) ).sum() / N
-            
-            #else
-            #logprob = torch.log(logits)
-            selected_logprobs = advatange_function * \
-                            log_logits[np.arange(len(action_tensor)), action_tensor]
-            loss = (-selected_logprobs.mean())           
-            self.optimizer.zero_grad()
-            loss.backward()
-            
-                        
-            # Update theta 
-            # Note : 
-            # argmin -log(likelihood) = argmax log(likelihood)
-            # that is, gradient descent of -log(likelihood) is equivalent to gradient ascent of log(likelihood)
-            # we can call pytorch step() function, just like usual deep learning problem !
-            self.optimizer.step()
 
-            print("\rEp: {} Average of last 10: {:.2f}".format(
-            episode + 1, np.mean(total_rewards[-10:])), end="")
             
             #print(loss)
         plt.plot(range(NN),episode_reward)

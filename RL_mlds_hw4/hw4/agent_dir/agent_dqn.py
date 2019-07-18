@@ -6,6 +6,9 @@ import cv2
 import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F  # useful stateless functions
+SEED = 11037
+random.seed(SEED)
+np.random.seed(SEED)
 
 
 Transition = namedtuple('Transition',
@@ -65,7 +68,8 @@ class Q_pi(torch.nn.Module):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
-        y = self.fc5(self.fc4(self.flatten(x)))
+        y = F.relu(self.fc4(self.flatten(x)))
+        y = self.fc5(y)
         return y
         
     def epsilon_greedy(self, pred, epsilon):
@@ -130,6 +134,7 @@ class Agent_DQN(Agent):
         print("  action space meaning:", self.env.get_meaning())
         print("  obeservation space",self.env.get_observation_space())
 
+        self.env.seed(SEED)
         self.Q_fn = Q_pi(self.env.get_action_space().n, self.device).to(device=self.device)
         self.Q_hat_fn = Q_pi(self.env.get_action_space().n, self.device).to(device=self.device)
         self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
@@ -180,7 +185,7 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 50000
+        NUM_EPISODES = 30000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
@@ -219,9 +224,9 @@ class Agent_DQN(Agent):
                 if episode % TARGET_UPDATE_C == 0:
                     self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
                 
-                self.Q_epsilon = self.epsilon_decline(time_step,LINEAR_DECLINE_STEP)
+                self.Q_epsilon = self.epsilon_decline(time_step, LINEAR_DECLINE_STEP)
             epsisode_history.append(episode_reward)
-            print("episode reward",episode_reward,"time_step",time_step,"epsilon",self.Q_epsilon)
+            print("episode reward",np.mean(epsisode_history[-100:]),"time_step",time_step,"epsilon",self.Q_epsilon)
             #print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         plt.plot(range(len(epsisode_history)), epsisode_history)
         plt.savefig('reward_history.png')
@@ -265,7 +270,7 @@ class Agent_DQN(Agent):
             #print("select action", select_action)
             next_state_values = self.Q_hat_fn(next_state_batch).detach()
             next_state_values = next_state_values.gather(1, select_action)
-            expected_state_action_values = 0.99 * (next_state_values) + reward_batch
+            expected_state_action_values = 0.999 * (next_state_values) + reward_batch
 
 
         """Regression"""
