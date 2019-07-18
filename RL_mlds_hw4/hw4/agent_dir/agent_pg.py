@@ -51,7 +51,7 @@ class ActorCritic(torch.nn.Module):
     def forward(self):
         raise NotImplementedError
         
-    def act(self, state, memory):
+    def act(self, state, memory): # PI
         state = torch.from_numpy(state).float().to(device) 
         action_probs = self.action_layer(state)
         dist = torch.distributions.Categorical(action_probs)
@@ -63,7 +63,7 @@ class ActorCritic(torch.nn.Module):
         
         return action.item()
     
-    def evaluate(self, state, action):
+    def evaluate(self, state, action): # V(s)
         action_probs = self.action_layer(state)
         dist = torch.distributions.Categorical(action_probs)
         
