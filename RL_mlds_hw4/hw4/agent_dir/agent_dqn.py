@@ -68,7 +68,7 @@ class Q_pi(torch.nn.Module):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
-        y = F.relu(self.fc4(self.flatten(x)))
+        y = F.relu(self.fc4(self.flatten(x))) # pluease add relu layer
         y = self.fc5(y)
         return y
         
@@ -226,7 +226,7 @@ class Agent_DQN(Agent):
                 
                 self.Q_epsilon = self.epsilon_decline(time_step, LINEAR_DECLINE_STEP)
             epsisode_history.append(episode_reward)
-            print("episode reward",np.mean(epsisode_history[-100:]),"time_step",time_step,"epsilon",self.Q_epsilon)
+            print("episode",episode,"episode reward",np.mean(epsisode_history[-100:]),"time_step",time_step,"epsilon",self.Q_epsilon)
             #print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         plt.plot(range(len(epsisode_history)), epsisode_history)
         plt.savefig('reward_history.png')
