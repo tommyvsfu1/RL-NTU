@@ -182,6 +182,7 @@ class Agent_PG(Agent):
 
         print("Environment info ...")
         print("  action space",self.env.get_action_space())
+        print("  meaning:", self.env.get_meaning())
         print("  obeservation space",self.env.get_observation_space())
         
         print("-- Debug -- ")
