@@ -133,12 +133,13 @@ class PPO():
         old_states = torch.stack(memory.states).to(self.device).detach()  
         old_actions = torch.stack(memory.actions).to(self.device).detach()
         old_logprobs = torch.stack(memory.logprobs).to(self.device).detach()
-      
+        tensorboard.histogram_summary("old_actions", old_actions)
         # Optimize policy for K epochs:
         for _ in range(self.K_epochs):
             # Evaluating old actions and values :
             logprobs, state_values, dist_entropy = self.evaluate(old_states, old_actions)
-            
+            tensorboard.histogram_summary("state_values", state_values)
+            tensorboard.histogram_summary("rewards", rewards)
             # Finding the ratio (pi_theta / pi_theta__old):
             ratios = torch.exp(logprobs - old_logprobs.detach())
                 
@@ -147,8 +148,8 @@ class PPO():
             surr1 = ratios * advantages
             surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
             mse_loss = 1.0*self.MseLoss(state_values, rewards)
-            cross_entropy_loss = -0.01 * dist_entropy
-            loss = -torch.min(surr1, surr2) + mse_loss + cross_entropy_loss
+            cross_entropy_loss = 0.01 * dist_entropy
+            loss = -torch.min(surr1, surr2) + mse_loss - cross_entropy_loss
             tensorboard.scalar_summary("clamp_loss", (-torch.min(surr1, surr2).mean().item()))
             tensorboard.scalar_summary("mse_loss", mse_loss.mean().item())
             tensorboard.scalar_summary("cross_entropy", cross_entropy_loss.mean().item())
@@ -158,7 +159,12 @@ class PPO():
             self.optimizer.zero_grad()
             loss.mean().backward()
             self.optimizer.step()
-        
+            tensorboard.histogram_summary("conv1_weight", self.policy.conv1.weight)
+            tensorboard.histogram_summary("conv2_weight", self.policy.conv2.weight)
+            tensorboard.histogram_summary("conv3_weight", self.policy.conv3.weight)
+            tensorboard.histogram_summary("fc4_weight", self.policy.fc4.weight)
+            tensorboard.histogram_summary("fc5_weight", self.policy.fc5.weight)
+            tensorboard.histogram_summary("fc6_weight", self.policy.fc6.weight)
         # Copy new weights into old policy:
         self.policy_old.load_state_dict(self.policy.state_dict())
         
@@ -230,6 +236,9 @@ class Agent_PG(Agent):
         self.net = PPO(self.device, 80*80, 2, 256, lr=1e-3, gamma=0.99, K_epochs=4, eps_clip=0.2)
         self.memory = Memory()
         self.tensorboard = TensorboardLogger()
+
+
+
         ##################
 
 
@@ -272,6 +281,7 @@ class Agent_PG(Agent):
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
+
         for episode in range(NN):
             # Collect Data (s,a,r)
             s_0 = prepro(self.env.reset()) # reset environment
