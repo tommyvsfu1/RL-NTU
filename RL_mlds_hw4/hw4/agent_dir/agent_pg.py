@@ -87,12 +87,16 @@ class PPO():
         self.MseLoss = torch.nn.MSELoss()
 
 
-    def act(self, state, memory): # action choosing
+    def act(self, state, memory, tensorboard): # action choosing
         state_expand = torch.from_numpy(np.expand_dims(state,0)).float().to(self.device) 
 
         logits, _ = self.policy_old(state_expand)
-
         action_probs = torch.exp(logits)
+        
+        # ----- debug for implementation error ------ 
+        tensorboard.histogram_summary("logits",logits)
+        tensorboard.histogram_summary("actions probs",action_probs)
+
         dist = torch.distributions.Categorical(action_probs)
         action = dist.sample()
         
@@ -134,6 +138,7 @@ class PPO():
         old_actions = torch.stack(memory.actions).to(self.device).detach()
         old_logprobs = torch.stack(memory.logprobs).to(self.device).detach()
         tensorboard.histogram_summary("old_actions", old_actions)
+        
         # Optimize policy for K epochs:
         for _ in range(self.K_epochs):
             # Evaluating old actions and values :
@@ -159,12 +164,20 @@ class PPO():
             self.optimizer.zero_grad()
             loss.mean().backward()
             self.optimizer.step()
-            tensorboard.histogram_summary("conv1_weight", self.policy.conv1.weight)
-            tensorboard.histogram_summary("conv2_weight", self.policy.conv2.weight)
-            tensorboard.histogram_summary("conv3_weight", self.policy.conv3.weight)
-            tensorboard.histogram_summary("fc4_weight", self.policy.fc4.weight)
-            tensorboard.histogram_summary("fc5_weight", self.policy.fc5.weight)
-            tensorboard.histogram_summary("fc6_weight", self.policy.fc6.weight)
+            tensorboard.histogram_summary("now_conv1_weight", self.policy.conv1.weight)
+            tensorboard.histogram_summary("now_conv2_weight", self.policy.conv2.weight)
+            tensorboard.histogram_summary("now_conv3_weight", self.policy.conv3.weight)
+            tensorboard.histogram_summary("now_fc4_weight", self.policy.fc4.weight)
+            tensorboard.histogram_summary("now_fc5_weight", self.policy.fc5.weight)
+            tensorboard.histogram_summary("now_fc6_weight", self.policy.fc6.weight)
+
+            tensorboard.histogram_summary("old_conv1_weight", self.policy_old.conv1.weight)
+            tensorboard.histogram_summary("old_conv2_weight", self.policy_old.conv2.weight)
+            tensorboard.histogram_summary("old_conv3_weight", self.policy_old.conv3.weight)
+            tensorboard.histogram_summary("old_fc4_weight", self.policy_old.fc4.weight)
+            tensorboard.histogram_summary("old_fc5_weight", self.policy_old.fc5.weight)
+            tensorboard.histogram_summary("old_fc6_weight", self.policy_old.fc6.weight)
+
         # Copy new weights into old policy:
         self.policy_old.load_state_dict(self.policy.state_dict())
         
@@ -338,7 +351,7 @@ class Agent_PG(Agent):
         ##################
         # Feedforward of the Network
         with torch.no_grad():
-            action = self.net.act(observation, self.memory)
+            action = self.net.act(observation, self.memory, self.tensorboard)
             return int(action + 2)
         
 
