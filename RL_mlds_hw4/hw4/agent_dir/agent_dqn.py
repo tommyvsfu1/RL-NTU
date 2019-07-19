@@ -6,6 +6,10 @@ import cv2
 import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F  # useful stateless functions
+from logger import TensorboardLogger
+
+
+
 SEED = 11037
 random.seed(SEED)
 np.random.seed(SEED)
@@ -80,7 +84,7 @@ class Q_pi(torch.nn.Module):
         x = val + adv - adv.mean(1).unsqueeze(1).expand(x.size(0),4)
         return x
         
-    def epsilon_greedy(self, pred, epsilon):
+    def epsilon_greedy(self, pred, epsilon, tensorboard):
         """
         Output : epsilon_greedy(argmax(Q_fn(x)),random(action_space)) 
         """
@@ -90,6 +94,7 @@ class Q_pi(torch.nn.Module):
             a = torch.argmax(pred).item()
         else :
             a = np.random.choice(range(4))
+        tensorboard.scalar_summary("make_action_action", a)
         return a
 
 
@@ -151,6 +156,7 @@ class Agent_DQN(Agent):
         self.BATCH_SIZE = 32
         self.Q_epsilon = 1.0
         self.optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
+        self.tensorboard = TensorboardLogger()
         """
         optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
         x = torch.zeros((10, 4, 84, 84), dtype=torch.float32)
@@ -248,6 +254,7 @@ class Agent_DQN(Agent):
 
         self.Q_fn.train()
         self.Q_hat_fn.eval()
+        self.tensorboard.time_s += 1
         """Sample from Replay Buffer"""
         # sample a batch from replay buffer
         transitions = self.replay_buffer.sample(self.BATCH_SIZE)
@@ -273,6 +280,7 @@ class Agent_DQN(Agent):
         #   next_state_values[data] = argmax Q'(s_t+1, r_t)
         if improvment == "DQN":
             next_state_values= self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
+            self.tensorboard.scalar_summary("BellmanChosen", next_state_values)
             expected_state_action_values = 0.99 * (next_state_values) + reward_batch
         elif improvment == "DDQN":
             select_action_values= self.Q_fn(next_state_batch).detach()
@@ -287,6 +295,7 @@ class Agent_DQN(Agent):
         """Regression"""
         loss_fn = torch.nn.MSELoss()
         loss = loss_fn(state_action_values, expected_state_action_values)
+        self.tensorboard.scalar_summary("total_loss", loss.item())
 
         # update
         self.optimizer.zero_grad()
@@ -309,7 +318,7 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #        
         Q_s_a= self.Q_fn.forward(expand_dim(observation).to(self.device))
-        a_0 = self.Q_fn.epsilon_greedy(Q_s_a, self.Q_epsilon)
+        a_0 = self.Q_fn.epsilon_greedy(Q_s_a, self.Q_epsilon, self.tensorboard)
         return a_0 
         ##################        
 
