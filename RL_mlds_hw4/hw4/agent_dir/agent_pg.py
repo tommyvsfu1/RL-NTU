@@ -231,7 +231,7 @@ class Agent_PG(Agent):
         
         
         # Model : Neural Network
-        self.device = torch.device('cpu')
+        self.device = torch.device('cuda')
         print("Device...  ",self.device)
         self.net = PPO(self.device, 80*80, 2, 256, lr=1e-3, gamma=0.99, K_epochs=4, eps_clip=0.2)
         self.memory = Memory()
