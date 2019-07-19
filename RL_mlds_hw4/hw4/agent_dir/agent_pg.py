@@ -120,6 +120,8 @@ class PPO():
         rewards = []
         discounted_reward = 0
         for reward in reversed(memory.rewards):
+            if reward != 0:
+                discounted_reward = 0 # pong specific ! (game boundary)
             discounted_reward = reward + (self.gamma * discounted_reward)
             rewards.insert(0, discounted_reward)
         
