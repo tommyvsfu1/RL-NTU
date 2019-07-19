@@ -24,7 +24,7 @@ def prepro(o):
 
 class Q_pi(torch.nn.Module):
     """
-    Model : Q^pi (Q is critic, pi is actor)
+    Model : Q^pi 
         Input : Image 
         Output : value of each action
     """    
@@ -35,18 +35,21 @@ class Q_pi(torch.nn.Module):
         #     torch.nn.ReLU(),
         #     torch.nn.Linear(H, D_out), # output layer size = action space size
         # ).to(self.device)
-        self.conv1 = torch.nn.Conv2d(4,32,kernel_size=8,stride=[4,4],padding=0)
+        self.conv1 = torch.nn.Conv2d(4,32,kernel_size=8,stride=[4,4])
         torch.nn.init.kaiming_normal_(self.conv1.weight)
-        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,stride=[2,2],padding=0)
+        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,stride=[2,2])
         torch.nn.init.kaiming_normal_(self.conv2.weight)
-        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,stride=[1,1],padding=0)
+        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,stride=[1,1])
         torch.nn.init.kaiming_normal_(self.conv3.weight)
         
-        self.fc4 = torch.nn.Linear((3136), 512)
-        self.fc5 = torch.nn.Linear((512), 4)
-        torch.nn.init.kaiming_normal_(self.fc4.weight)
-        torch.nn.init.kaiming_normal_(self.fc5.weight)
-
+        self.fc1_adv = torch.nn.Linear((3136), 512)
+        self.fc1_val = torch.nn.Linear((3136), 512)
+        self.fc2_adv = torch.nn.Linear((512), 4)
+        self.fc2_val = torch.nn.Linear((512), 1)
+        torch.nn.init.kaiming_normal_(self.fc1_adv.weight)
+        torch.nn.init.kaiming_normal_(self.fc1_val.weight)
+        torch.nn.init.kaiming_normal_(self.fc2_adv.weight)
+        torch.nn.init.kaiming_normal_(self.fc2_val.weight)
 
     def flatten(self, x):
         """
@@ -68,9 +71,14 @@ class Q_pi(torch.nn.Module):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
-        y = F.relu(self.fc4(self.flatten(x))) # please add relu layer
-        y = self.fc5(y)
-        return y
+        x = self.flatten(x)
+        adv = F.relu(self.fc1_adv(x))
+        val = F.relu(self.fc1_val(x))
+
+        adv = self.fc2_adv(adv)
+        val = self.fc2_val(val).expand(x.size(0),4)
+        x = val + adv - adv.mean(1).unsqueeze(1).expand(x.size(0),4)
+        return x
         
     def epsilon_greedy(self, pred, epsilon):
         """
@@ -88,9 +96,9 @@ class Q_pi(torch.nn.Module):
 class ReplayBuffer(object):
     """
     Replay Buffer for Q function
-        default size : 10000 of (s_t, a_t, r_t, s_t+1)
+        default size : 20000 of (s_t, a_t, r_t, s_t+1)
     """
-    def __init__(self, capacity=10000):
+    def __init__(self, capacity=20000):
         self.capacity = capacity
         self.memory = []
         self.position = 0
@@ -126,7 +134,7 @@ class Agent_DQN(Agent):
             print('loading trained model')
         ##################
         # YOUR CODE HERE #
-        self.device = torch.device('cuda')
+        self.device = torch.device('cpu')
         print("Hardware Device info")
         print("  using device:",self.device)
         print("Environment info:")
@@ -190,7 +198,7 @@ class Agent_DQN(Agent):
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
         LINEAR_DECLINE_STEP = 80000
-        MAX_STEP = 10000
+        MAX_STEP = 2000
         time_step = 0
         epsisode_history = []
         for episode in range(NUM_EPISODES):
@@ -219,7 +227,7 @@ class Agent_DQN(Agent):
 
                 # optimize Q model
                 if len(self.replay_buffer) % UPDATE_FREQUENCY == 0:        
-                    self.optimize_model("DDQN")
+                    self.optimize_model("DQN")
                 
                 # update  Q' model
                 if episode % TARGET_UPDATE_C == 0:
@@ -250,26 +258,28 @@ class Agent_DQN(Agent):
         reward_batch = torch.cat(batch.reward).to(self.device)
         next_state_batch = torch.cat(batch.state).to(self.device)
 
-    
+
         """ Q Network """
         # self.Q_fn(state_batch) return (N,action space_n=4)
         # .gater will select the right index
         # reference : https://www.cnblogs.com/HongjianChen/p/9451526.html
         state_action_values = self.Q_fn(state_batch).gather(1, action_batch)
+        
+
         """ Q_hat(Target) Network """
         # .max(1,keepdim=True)[0] return (N,1) vector 
         # same as below 
         # for data in range(batch):
         #   next_state_values[data] = argmax Q'(s_t+1, r_t)
         if improvment == "DQN":
-            next_state_values = self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
+            next_state_values= self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
             expected_state_action_values = 0.99 * (next_state_values) + reward_batch
         elif improvment == "DDQN":
-            select_action_values = self.Q_fn(next_state_batch).detach()
+            select_action_values= self.Q_fn(next_state_batch).detach()
             #print("select action values", select_action_values)
             select_action = torch.argmax(select_action_values, dim = 1, keepdim = True)
             #print("select action", select_action)
-            next_state_values = self.Q_hat_fn(next_state_batch).detach()
+            next_state_values, _ = self.Q_hat_fn(next_state_batch).detach()
             next_state_values = next_state_values.gather(1, select_action)
             expected_state_action_values = 0.999 * (next_state_values) + reward_batch
 
@@ -298,7 +308,7 @@ class Agent_DQN(Agent):
         """
         ##################
         # YOUR CODE HERE #        
-        Q_s_a = self.Q_fn.forward(expand_dim(observation).to(self.device))
+        Q_s_a= self.Q_fn.forward(expand_dim(observation).to(self.device))
         a_0 = self.Q_fn.epsilon_greedy(Q_s_a, self.Q_epsilon)
         return a_0 
         ##################        
