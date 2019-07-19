@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import cv2
 import skimage
 import torch.nn.functional as F  # useful stateless functions
+from logger import TensorboardLogger
+
 seed = 9487
 np.random.seed(seed)
 
@@ -34,7 +36,9 @@ class Memory:
 
 class ActorCritic(torch.nn.Module):
     def __init__(self, state_dim, action_dim, n_latent_var):
-        super(ActorCritic, self).__init__()        
+        super(ActorCritic, self).__init__()    
+
+        # CNN (feature layers)    
         self.conv1 = torch.nn.Conv2d(1,32,kernel_size=8,stride=[4,4],padding=0)
         torch.nn.init.kaiming_normal_(self.conv1.weight)
         self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,stride=[2,2],padding=0)
@@ -103,10 +107,15 @@ class PPO():
         dist = torch.distributions.Categorical(action_probs) 
         action_logprobs = dist.log_prob(action)
         dist_entropy = dist.entropy()
-                
+        # sanity check
+        #p_log_p = logits * action_probs
+        #sanity_check_cross_entropy = -p_log_p.sum(-1)
+
         return action_logprobs, torch.squeeze(values), dist_entropy
 
-    def update(self, memory):   
+    def update(self, memory, tensorboard):   
+        self.policy.train()
+        tensorboard.time_s += 1
         # Monte Carlo estimate of state rewards:
         rewards = []
         discounted_reward = 0
@@ -132,10 +141,16 @@ class PPO():
             ratios = torch.exp(logprobs - old_logprobs.detach())
                 
             # Finding Surrogate Loss:
-            advantages = rewards - state_values.detach()
+            advantages = rewards - state_values
             surr1 = ratios * advantages
             surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
-            loss = -torch.min(surr1, surr2) + 0.5*self.MseLoss(state_values, rewards) - 0.01*dist_entropy
+            mse_loss = 1.0*self.MseLoss(state_values, rewards)
+            cross_entropy_loss = -0.01 * dist_entropy
+            loss = -torch.min(surr1, surr2) + mse_loss + cross_entropy_loss
+            tensorboard.scalar_summary("clamp_loss", (-torch.min(surr1, surr2).mean().item()))
+            tensorboard.scalar_summary("mse_loss", mse_loss.mean().item())
+            tensorboard.scalar_summary("cross_entropy", cross_entropy_loss.mean().item())
+            tensorboard.scalar_summary("total_loss", loss.mean().item())
             
             # take gradient step
             self.optimizer.zero_grad()
@@ -210,8 +225,9 @@ class Agent_PG(Agent):
         # Model : Neural Network
         self.device = torch.device('cpu')
         print("Device...  ",self.device)
-        self.net = PPO(self.device, 80*80, 2, 256, 1e-3, 0.99, 4, 0.2)
+        self.net = PPO(self.device, 80*80, 2, 256, lr=1e-3, gamma=0.99, K_epochs=4, eps_clip=0.2)
         self.memory = Memory()
+        self.tensorboard = TensorboardLogger()
         ##################
 
 
@@ -280,7 +296,7 @@ class Agent_PG(Agent):
 
 
             # update
-            self.net.update(self.memory)
+            self.net.update(self.memory, self.tensorboard)
             
             # clear
             self.memory.clear_memory()
