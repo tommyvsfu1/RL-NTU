@@ -351,7 +351,7 @@ class Agent_PG(Agent):
                 
                 # Store reward, old_policy_value
                 self.memory.rewards.append(reward)
-                self.memory.values.append(value)
+                #self.memory.values.append(value)
                 if done:
                     break
 
