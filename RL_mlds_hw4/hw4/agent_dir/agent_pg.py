@@ -111,7 +111,7 @@ class PPO():
             memory.states.append(torch.from_numpy(state).float())
             memory.actions.append(action)
             memory.logprobs.append(dist.log_prob(action))
-            return action.item(), value.item()
+            return action.item()#, value.item()
     
     def evaluate(self, state, action): # prepare for PPO Loss
         #logits, values = self.policy(state)
