@@ -58,18 +58,18 @@ class ActorCritic(torch.nn.Module):
         self.actor_layer = torch.nn.LogSoftmax(dim=-1)
         
         # critic 
-        self.fc6 = torch.nn.Linear((512), 1)
-        torch.nn.init.kaiming_normal_(self.fc6.weight)
+        #self.fc6 = torch.nn.Linear((512), 1)
+        #torch.nn.init.kaiming_normal_(self.fc6.weight)
 
     def forward(self, x):
         c1 = F.relu(self.conv1(x))
         c2 = F.relu(self.conv2(c1))
         c3 = F.relu(self.conv3(c2))
         f4 = F.relu(self.fc4(flatten(c3)))
-        critic_value = self.fc6(f4)
+        #critic_value = self.fc6(f4)
         policy_value = self.actor_layer(self.fc5(f4))
 
-        return policy_value, critic_value
+        return policy_value #, critic_value
 
 
     
@@ -97,7 +97,8 @@ class PPO():
     def act(self, state, memory, tensorboard): # action choosing
         state_expand = torch.from_numpy(np.expand_dims(state,0)).float().to(self.device) 
         with torch.no_grad():
-            logits, value = self.policy_old(state_expand)
+            #logits, value = self.policy_old(state_expand)
+            logits = self.policy_old(state_expand)
             action_probs = torch.exp(logits)
             
             # ----- debug for implementation error ------ 
@@ -113,7 +114,8 @@ class PPO():
             return action.item(), value.item()
     
     def evaluate(self, state, action): # prepare for PPO Loss
-        logits, values = self.policy(state)
+        #logits, values = self.policy(state)
+        logits = self.policy(state)
         action_probs = torch.exp(logits)
         dist = torch.distributions.Categorical(action_probs) 
         action_logprobs = dist.log_prob(action)
@@ -122,8 +124,8 @@ class PPO():
         #p_log_p = logits * action_probs
         #sanity_check_cross_entropy = -p_log_p.sum(-1)
 
-        return action_logprobs, torch.squeeze(values), dist_entropy
-
+        # return action_logprobs, torch.squeeze(values), dist_entropy
+        return action_logprobs, torch.zeros((1)), dist_entropy
     def montecarlo_discounted_rewards(self, memory):
         # Monte Carlo estimate of state rewards:
         rewards = []
@@ -167,9 +169,9 @@ class PPO():
 
         old_values = torch.FloatTensor(memory.values).to(self.device).detach()
         old_rewards = torch.FloatTensor(memory.rewards).to(self.device).detach()
-        advantages = torch.FloatTensor(advantages).to(self.device).detach()
+        #advantages = torch.FloatTensor(advantages).to(self.device).detach()
         # normalization
-        advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-5)
+        #advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-5)
         # target values
         returns = old_values + advantages
 
@@ -343,8 +345,7 @@ class Agent_PG(Agent):
                 delta_state = s_1 - s_0
                 s_0 = s_1              
 
-                action, value = self.make_action(delta_state) # logprob is for PPO
-                print("episode",episode,"action", action)
+                action = self.make_action(delta_state) # logprob is for PPO
                 s_1, reward, done, info = self.env.step(action)
                 s_1 = prepro(s_1)
                 
@@ -391,8 +392,8 @@ class Agent_PG(Agent):
         ##################
         # Feedforward of the Network
 
-        action, value = self.net.act(observation, self.memory, self.tensorboard)
-        return int(action + 2), value
+        action = self.net.act(observation, self.memory, self.tensorboard)
+        return int(action + 2)
         
 
     def discount_reward(self, reward_tensor, t, Tn, discount_factor=0.99):
