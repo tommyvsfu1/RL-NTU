@@ -101,8 +101,8 @@ class PPO():
             action_probs = torch.exp(logits)
             
             # ----- debug for implementation error ------ 
-            tensorboard.histogram_summary("logits",logits)
-            tensorboard.histogram_summary("actions probs",action_probs)
+            #tensorboard.histogram_summary("logits",logits)
+            #tensorboard.histogram_summary("actions probs",action_probs)
 
             dist = torch.distributions.Categorical(action_probs)
             action = dist.sample()
