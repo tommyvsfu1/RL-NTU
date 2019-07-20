@@ -5,9 +5,9 @@ from torchvision import datasets, transforms
 
 # Writer will output to ./runs/ directory by default
 class TensorboardLogger(object):
-    def __init__(self):
+    def __init__(self, dir):
         """Create a summary writer logging to log_dir."""
-        self.writer = SummaryWriter()
+        self.writer = SummaryWriter(log_dir=dir)
         self.time_s = 0
 
     def scalar_summary(self, tag, value, t=-1):

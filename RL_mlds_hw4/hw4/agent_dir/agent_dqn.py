@@ -156,7 +156,7 @@ class Agent_DQN(Agent):
         self.BATCH_SIZE = 32
         self.Q_epsilon = 1.0
         self.optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
-        self.tensorboard = TensorboardLogger()
+        self.tensorboard = TensorboardLogger("./logger_dqn/exp1")
         """
         optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
         x = torch.zeros((10, 4, 84, 84), dtype=torch.float32)
@@ -271,7 +271,7 @@ class Agent_DQN(Agent):
         # .gater will select the right index
         # reference : https://www.cnblogs.com/HongjianChen/p/9451526.html
         state_action_values = self.Q_fn(state_batch).gather(1, action_batch)
-        
+        self.tensorboard.histogram_summary("state_action_values", state_action_values)
 
         """ Q_hat(Target) Network """
         # .max(1,keepdim=True)[0] return (N,1) vector 
@@ -280,8 +280,10 @@ class Agent_DQN(Agent):
         #   next_state_values[data] = argmax Q'(s_t+1, r_t)
         if improvment == "DQN":
             next_state_values= self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
-            self.tensorboard.scalar_summary("BellmanChosen", next_state_values)
             expected_state_action_values = 0.99 * (next_state_values) + reward_batch
+            self.tensorboard.histogram_summary("next_state_values", next_state_values)
+            self.tensorboard.histogram_summary("reward_batch", reward_batch)
+            self.tensorboard.histogram_summary("expected_bellman", expected_state_action_values)
         elif improvment == "DDQN":
             select_action_values= self.Q_fn(next_state_batch).detach()
             #print("select action values", select_action_values)
@@ -296,6 +298,15 @@ class Agent_DQN(Agent):
         loss_fn = torch.nn.MSELoss()
         loss = loss_fn(state_action_values, expected_state_action_values)
         self.tensorboard.scalar_summary("total_loss", loss.item())
+
+
+        self.tensorboard.histogram_summary("q_conv1", self.Q_fn.conv1.weight)
+        self.tensorboard.histogram_summary("q_conv2", self.Q_fn.conv2.weight)
+        self.tensorboard.histogram_summary("q_conv3", self.Q_fn.conv3.weight)
+        self.tensorboard.histogram_summary("q_fc1_adv", self.Q_fn.fc1_adv.weight)
+        self.tensorboard.histogram_summary("q_fc2_adv", self.Q_fn.fc2_adv.weight)
+        self.tensorboard.histogram_summary("q_fc1_val", self.Q_fn.fc1_val.weight)
+        self.tensorboard.histogram_summary("q_fc2_val", self.Q_fn.fc2_val.weight)
 
         # update
         self.optimizer.zero_grad()

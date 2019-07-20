@@ -1,4 +1,5 @@
 from agent_dir.agent import Agent
+import copy
 import scipy
 import scipy.misc
 import numpy as np
@@ -11,6 +12,7 @@ from logger import TensorboardLogger
 
 seed = 9487
 np.random.seed(seed)
+torch.manual_seed(seed)
 
 def flatten(x):
     """
@@ -27,12 +29,14 @@ class Memory:
         self.states = []
         self.logprobs = []
         self.rewards = []
+        self.values = []
     
     def clear_memory(self):
         del self.actions[:]
         del self.states[:]
         del self.logprobs[:]
         del self.rewards[:]
+        del self.values[:]
 
 class ActorCritic(torch.nn.Module):
     def __init__(self, state_dim, action_dim, n_latent_var):
@@ -77,33 +81,36 @@ class PPO():
         self.gamma = gamma
         self.eps_clip = eps_clip
         self.K_epochs = K_epochs
-        
+        print("PPO setting...")
+        print("learning rate",self.lr)
+        print("gamma",self.gamma)
+        print("eps_clip",self.eps_clip)
+        print("K_epochs", self.K_epochs)
         self.policy = ActorCritic(state_dim, action_dim, n_latent_var).to(device)
-        self.policy_old = ActorCritic(state_dim, action_dim, n_latent_var).to(device)
-        self.policy_old.load_state_dict(self.policy.state_dict())
+        self.policy_old = copy.deepcopy(self.policy).to(device)
         self.policy_old.eval()
-        self.optimizer = torch.optim.Adam(self.policy.parameters(),lr=lr)
+        self.optimizer = torch.optim.RMSprop(self.policy.parameters(),lr=lr)
 
         self.MseLoss = torch.nn.MSELoss()
 
 
     def act(self, state, memory, tensorboard): # action choosing
         state_expand = torch.from_numpy(np.expand_dims(state,0)).float().to(self.device) 
+        with torch.no_grad():
+            logits, value = self.policy_old(state_expand)
+            action_probs = torch.exp(logits)
+            
+            # ----- debug for implementation error ------ 
+            tensorboard.histogram_summary("logits",logits)
+            tensorboard.histogram_summary("actions probs",action_probs)
 
-        logits, _ = self.policy_old(state_expand)
-        action_probs = torch.exp(logits)
-        
-        # ----- debug for implementation error ------ 
-        tensorboard.histogram_summary("logits",logits)
-        tensorboard.histogram_summary("actions probs",action_probs)
-
-        dist = torch.distributions.Categorical(action_probs)
-        action = dist.sample()
-        
-        memory.states.append(torch.from_numpy(state).float())
-        memory.actions.append(action)
-        memory.logprobs.append(dist.log_prob(action))
-        return action.item()
+            dist = torch.distributions.Categorical(action_probs)
+            action = dist.sample()
+            
+            memory.states.append(torch.from_numpy(state).float())
+            memory.actions.append(action)
+            memory.logprobs.append(dist.log_prob(action))
+            return action.item(), value.item()
     
     def evaluate(self, state, action): # prepare for PPO Loss
         logits, values = self.policy(state)
@@ -117,9 +124,7 @@ class PPO():
 
         return action_logprobs, torch.squeeze(values), dist_entropy
 
-    def update(self, memory, tensorboard):   
-        self.policy.train()
-        tensorboard.time_s += 1
+    def montecarlo_discounted_rewards(self, memory):
         # Monte Carlo estimate of state rewards:
         rewards = []
         discounted_reward = 0
@@ -132,27 +137,55 @@ class PPO():
         # Normalizing the rewards:
         rewards = torch.tensor(rewards).to(self.device)
         rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-5)
+        return rewards
+    
+    def gae(self, memory, gamma=0.99, lambd=1.0):
+        # reference code : https://github.com/JasonYao81000/MLDS2018SPRING/blob/master/hw4/agent_dir/agent_pg.py
+        v_preds = memory.values
+        v_preds_next = v_preds[1:] + [0]
+        deltas = [r_t + gamma * v_next - v for r_t, v_next, v in zip(memory.rewards, v_preds_next, v_preds)]
+        # calculate generative advantage estimator(lambda = 1), see ppo paper eq(11)
+        gaes = copy.deepcopy(deltas)
+        for t in reversed(range(len(gaes) - 1)):  # is T-1, where T is time step which run policy
+            gaes[t] = gaes[t] + gamma * gaes[t + 1]
         
+        return gaes
+
+    def update(self, memory, tensorboard):   
+        self.policy.train()
+        tensorboard.time_s += 1
+
+        #rewards = self.montecarlo_discounted_rewards(memory)
+        advantages = self.gae(memory)
         # convert list to tensor
         old_states = torch.stack(memory.states).to(self.device).detach()  
         old_actions = torch.stack(memory.actions).to(self.device).detach()
         old_logprobs = torch.stack(memory.logprobs).to(self.device).detach()
+
+
+        old_values = torch.FloatTensor(memory.values).to(self.device).detach()
+        old_rewards = torch.FloatTensor(memory.rewards).to(self.device).detach()
+        advantages = torch.FloatTensor(advantages).to(self.device).detach()
+        # normalization
+        advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-5)
+        # target values
+        returns = old_values + advantages
+
         tensorboard.histogram_summary("old_actions", old_actions)
-        
+        tensorboard.histogram_summary("old_rewards", old_rewards)        
         # Optimize policy for K epochs:
         for _ in range(self.K_epochs):
             # Evaluating old actions and values :
             logprobs, state_values, dist_entropy = self.evaluate(old_states, old_actions)
+            tensorboard.histogram_summary("probs", torch.exp(logprobs))
             tensorboard.histogram_summary("state_values", state_values)
-            tensorboard.histogram_summary("rewards", rewards)
             # Finding the ratio (pi_theta / pi_theta__old):
             ratios = torch.exp(logprobs - old_logprobs.detach())
                 
             # Finding Surrogate Loss:
-            advantages = rewards - state_values
             surr1 = ratios * advantages
             surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
-            mse_loss = 1.0*self.MseLoss(state_values, rewards)
+            mse_loss = 0.5*self.MseLoss(state_values, returns)
             cross_entropy_loss = 0.01 * dist_entropy
             loss = -torch.min(surr1, surr2) + mse_loss - cross_entropy_loss
             tensorboard.scalar_summary("clamp_loss", (-torch.min(surr1, surr2).mean().item()))
@@ -244,11 +277,14 @@ class Agent_PG(Agent):
         
         
         # Model : Neural Network
-        self.device = torch.device('cuda')
+        if torch.cuda.is_available():
+            self.device = torch.device('cuda')
+        else :
+            self.device = torch.device('cpu')
         print("Device...  ",self.device)
         self.net = PPO(self.device, 80*80, 2, 256, lr=1e-3, gamma=0.99, K_epochs=4, eps_clip=0.2)
         self.memory = Memory()
-        self.tensorboard = TensorboardLogger()
+        self.tensorboard = TensorboardLogger("./logger_ppo/exp1_7_20")
 
 
 
@@ -305,13 +341,14 @@ class Agent_PG(Agent):
                 delta_state = s_1 - s_0
                 s_0 = s_1              
 
-                action = self.make_action(delta_state) # logprob is for PPO
+                action, value = self.make_action(delta_state) # logprob is for PPO
+                print("episode",episode,"action", action)
                 s_1, reward, done, info = self.env.step(action)
                 s_1 = prepro(s_1)
                 
-                # Store state
+                # Store reward, old_policy_value
                 self.memory.rewards.append(reward)
-
+                self.memory.values.append(value)
                 if done:
                     break
 
@@ -329,6 +366,7 @@ class Agent_PG(Agent):
             # record
             print("\rEp: {} Average of last 10: {:.2f}".format(
                 episode + 1, np.mean(total_rewards[-30:])), end="")    
+            self.tensorboard.scalar_summary("average_reward", np.mean(total_rewards[-30:]))
         plt.plot(range(NN),episode_reward)
         plt.savefig('ppo_loss.png')
         ##################
@@ -350,9 +388,9 @@ class Agent_PG(Agent):
         # YOUR CODE HERE #
         ##################
         # Feedforward of the Network
-        with torch.no_grad():
-            action = self.net.act(observation, self.memory, self.tensorboard)
-            return int(action + 2)
+
+        action, value = self.net.act(observation, self.memory, self.tensorboard)
+        return int(action + 2), value
         
 
     def discount_reward(self, reward_tensor, t, Tn, discount_factor=0.99):
