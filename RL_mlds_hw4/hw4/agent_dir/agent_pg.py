@@ -156,7 +156,9 @@ class PPO():
         tensorboard.time_s += 1
 
         #rewards = self.montecarlo_discounted_rewards(memory)
-        advantages = self.gae(memory)
+        #advantages = self.gae(memory)
+        dis_rewards = self.montecarlo_discounted_rewards(memory)
+        advantages = dis_rewards
         # convert list to tensor
         old_states = torch.stack(memory.states).to(self.device).detach()  
         old_actions = torch.stack(memory.actions).to(self.device).detach()
@@ -171,45 +173,45 @@ class PPO():
         # target values
         returns = old_values + advantages
 
-        tensorboard.histogram_summary("old_actions", old_actions)
-        tensorboard.histogram_summary("old_rewards", old_rewards)        
+        #tensorboard.histogram_summary("old_actions", old_actions)
+        #tensorboard.histogram_summary("old_rewards", old_rewards)        
         # Optimize policy for K epochs:
         for _ in range(self.K_epochs):
             # Evaluating old actions and values :
             logprobs, state_values, dist_entropy = self.evaluate(old_states, old_actions)
-            tensorboard.histogram_summary("probs", torch.exp(logprobs))
-            tensorboard.histogram_summary("state_values", state_values)
+            #tensorboard.histogram_summary("probs", torch.exp(logprobs))
+            #tensorboard.histogram_summary("state_values", state_values)
             # Finding the ratio (pi_theta / pi_theta__old):
             ratios = torch.exp(logprobs - old_logprobs.detach())
                 
             # Finding Surrogate Loss:
             surr1 = ratios * advantages
             surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
-            mse_loss = 0.5*self.MseLoss(state_values, returns)
-            cross_entropy_loss = 0.01 * dist_entropy
-            loss = -torch.min(surr1, surr2) + mse_loss - cross_entropy_loss
-            tensorboard.scalar_summary("clamp_loss", (-torch.min(surr1, surr2).mean().item()))
-            tensorboard.scalar_summary("mse_loss", mse_loss.mean().item())
-            tensorboard.scalar_summary("cross_entropy", cross_entropy_loss.mean().item())
-            tensorboard.scalar_summary("total_loss", loss.mean().item())
+            #mse_loss = 0.5*self.MseLoss(state_values, returns)
+            #cross_entropy_loss = 0.01 * dist_entropy
+            loss = -torch.min(surr1, surr2) #+ mse_loss - cross_entropy_loss
+            #tensorboard.scalar_summary("clamp_loss", (-torch.min(surr1, surr2).mean().item()))
+            #tensorboard.scalar_summary("mse_loss", mse_loss.mean().item())
+            #tensorboard.scalar_summary("cross_entropy", cross_entropy_loss.mean().item())
+            #tensorboard.scalar_summary("total_loss", loss.mean().item())
             
             # take gradient step
             self.optimizer.zero_grad()
             loss.mean().backward()
             self.optimizer.step()
-            tensorboard.histogram_summary("now_conv1_weight", self.policy.conv1.weight)
-            tensorboard.histogram_summary("now_conv2_weight", self.policy.conv2.weight)
-            tensorboard.histogram_summary("now_conv3_weight", self.policy.conv3.weight)
-            tensorboard.histogram_summary("now_fc4_weight", self.policy.fc4.weight)
-            tensorboard.histogram_summary("now_fc5_weight", self.policy.fc5.weight)
-            tensorboard.histogram_summary("now_fc6_weight", self.policy.fc6.weight)
+            #tensorboard.histogram_summary("now_conv1_weight", self.policy.conv1.weight)
+            #tensorboard.histogram_summary("now_conv2_weight", self.policy.conv2.weight)
+            #tensorboard.histogram_summary("now_conv3_weight", self.policy.conv3.weight)
+            #tensorboard.histogram_summary("now_fc4_weight", self.policy.fc4.weight)
+            #tensorboard.histogram_summary("now_fc5_weight", self.policy.fc5.weight)
+            #tensorboard.histogram_summary("now_fc6_weight", self.policy.fc6.weight)
 
-            tensorboard.histogram_summary("old_conv1_weight", self.policy_old.conv1.weight)
-            tensorboard.histogram_summary("old_conv2_weight", self.policy_old.conv2.weight)
-            tensorboard.histogram_summary("old_conv3_weight", self.policy_old.conv3.weight)
-            tensorboard.histogram_summary("old_fc4_weight", self.policy_old.fc4.weight)
-            tensorboard.histogram_summary("old_fc5_weight", self.policy_old.fc5.weight)
-            tensorboard.histogram_summary("old_fc6_weight", self.policy_old.fc6.weight)
+            #tensorboard.histogram_summary("old_conv1_weight", self.policy_old.conv1.weight)
+            #tensorboard.histogram_summary("old_conv2_weight", self.policy_old.conv2.weight)
+            #tensorboard.histogram_summary("old_conv3_weight", self.policy_old.conv3.weight)
+            #tensorboard.histogram_summary("old_fc4_weight", self.policy_old.fc4.weight)
+            #tensorboard.histogram_summary("old_fc5_weight", self.policy_old.fc5.weight)
+            #tensorboard.histogram_summary("old_fc6_weight", self.policy_old.fc6.weight)
 
         # Copy new weights into old policy:
         self.policy_old.load_state_dict(self.policy.state_dict())
@@ -284,7 +286,7 @@ class Agent_PG(Agent):
         print("Device...  ",self.device)
         self.net = PPO(self.device, 80*80, 2, 256, lr=1e-3, gamma=0.99, K_epochs=4, eps_clip=0.2)
         self.memory = Memory()
-        self.tensorboard = TensorboardLogger("./logger_ppo/exp1_7_20")
+        self.tensorboard = TensorboardLogger("./logger_ppo/exp2_7_20")
 
 
 
