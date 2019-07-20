@@ -173,7 +173,7 @@ class PPO():
         # normalization
         #advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-5)
         # target values
-        returns = old_values + advantages
+        #returns = old_values + advantages
 
         #tensorboard.histogram_summary("old_actions", old_actions)
         #tensorboard.histogram_summary("old_rewards", old_rewards)        
