@@ -9,7 +9,7 @@ import skimage
 
 seed = 9487
 np.random.seed(seed)
-
+torch.manual_seed(seed)
 
 class Memory:
     def __init__(self):
@@ -17,12 +17,13 @@ class Memory:
         self.states = []
         self.logprobs = []
         self.rewards = []
-    
+        self.action_prbo = []
     def clear_memory(self):
         del self.actions[:]
         del self.states[:]
         del self.logprobs[:]
         del self.rewards[:]
+        del self.action_prbo[:]
 
 class ActorCritic(torch.nn.Module):
     def __init__(self, state_dim, action_dim, n_latent_var):
@@ -76,17 +77,30 @@ class ActorCritic(torch.nn.Module):
     
 
 class PPO:
-    def __init__(self, state_dim, action_dim, n_latent_var, lr, betas, gamma, K_epochs, eps_clip):
-        self.lr = lr
-        self.betas = betas
-        self.gamma = gamma
-        self.eps_clip = eps_clip
-        self.K_epochs = K_epochs
-        
-        self.policy = ActorCritic(state_dim, action_dim, n_latent_var).to(device)
+    def __init__(self):
+        self.lr = 1e-3
+        self.betas = 1
+        self.gamma = 0.99
+        self.eps_clip = 0.2
+        self.K_epochs = 1
+        self.device = 'cpu'
+        D_in, H, D_out = 80*80, 256, 2
+        self.policy = torch.nn.Sequential(
+            torch.nn.Linear(D_in, H),
+            torch.nn.ReLU(),
+            torch.nn.Linear(H, D_out),
+            torch.nn.LogSoftmax(dim=-1)
+        ).to(self.device)
+        self.policy_old = torch.nn.Sequential(
+            torch.nn.Linear(D_in, H),
+            torch.nn.ReLU(),
+            torch.nn.Linear(H, D_out),
+            torch.nn.LogSoftmax(dim=-1)
+        ).to(self.device)
+        self.policy_old.load_state_dict(self.policy.state_dict())
         self.optimizer = torch.optim.Adam(self.policy.parameters(),
-                                              lr=lr, betas=betas)
-        self.policy_old = ActorCritic(state_dim, action_dim, n_latent_var).to(device)
+                                              lr=self.lr)
+
         
         self.MseLoss = torch.nn.MSELoss()
     
@@ -192,25 +206,13 @@ class Agent_PG(Agent):
         
         
         # Model : Neural Network
-        self.device = torch.device('cuda')
+        self.device = torch.device('cpu')
         print("Device...  ",self.device)
 
         self.improvement = "PG"
-        D_in, H, D_out = 80*80, 256, 2
-        self.policy = torch.nn.Sequential(
-            torch.nn.Linear(D_in, H),
-            torch.nn.ReLU(),
-            torch.nn.Linear(H, D_out),
-            torch.nn.LogSoftmax(dim=-1)
-        ).to(self.device)
-        self.policy_old = torch.nn.Sequential(
-            torch.nn.Linear(D_in, H),
-            torch.nn.ReLU(),
-            torch.nn.Linear(H, D_out),
-            torch.nn.LogSoftmax(dim=-1)
-        ).to(self.device)
-        self.policy_old.load_state_dict(self.policy.state_dict())
-        self.optimizer = torch.optim.RMSprop(self.policy.parameters(), lr=1e-3)
+        self.net = PPO()
+        self.memory = Memory()
+        self.optimizer = torch.optim.RMSprop(self.net.policy.parameters(), lr=1e-3)
         ##################
 
 
@@ -234,35 +236,13 @@ class Agent_PG(Agent):
         """
         ##################
         # YOUR CODE HERE #
-        # Test shape
-        #s = self.env.reset()
-        #print("s shape", s.shape)
-        #o = prepro(s)
-        #o = o.reshape(80,80)
-        #print("o shape", o.shape)
-        #print(o)
-        #plt.imshow(o,cmap='gray',vmin=0,vmax=255)
-        #plt.show()
-
-        #print("o shape", o.shape)
-        #sample_action = self.make_action(o, test=True)
-        #print("sample action", sample_action)
-        #print(pe.predict(s))
-        #print(pe.network(torch.FloatTensor(s)))
-        #plt.plot(range(10), range(10))
-        #plt.savefig('f.png')
-        
         NN = 1000
         MAX_GAME_FRAME = 19000
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
         for episode in range(NN):
-            # Collect Data (s,a,r)
-            observation_tensor = [] # use list to store image, then convert to numpy
-            action_tensor = np.array([]) # since action is integer, use numpy directly to store action
-            reward_tensor = np.array([]) # since reward is integer, use numpy directly to store reward
-            logprob_tensor = np.array([])
+            # Collect Data (s,a,r)        
             s_0 = self.env.reset() # reset environment
             s_0 = prepro(s_0)
             sample_action = self.env.action_space.sample()
@@ -272,74 +252,45 @@ class Agent_PG(Agent):
                 delta_state = s_1 - s_0
                 s_0 = s_1              
 
-                action, logprob = self.make_action(delta_state) # logprob is for PPO
+                action, action_prob = self.make_action(delta_state) # logprob is for PPO
                 s_1, reward, done, info = self.env.step(action)
                 s_1 = prepro(s_1)
                 
                 # Store state
-                observation_tensor.append(delta_state)
-                action_tensor = np.append(action_tensor, action)
-                reward_tensor = np.append(reward_tensor, reward)
-                logprob_tensor = np.append(logprob_tensor, logprob) # logprob tensor are for PPO
-
+                self.memory.states.append(torch.from_numpy(delta_state))
+                self.memory.actions.append(torch.tensor([action-2]))
+                self.memory.rewards.append(reward)
+                self.memory.action_prbo.append(action_prob)
+                self.memory.logprobs.append(torch.log( torch.tensor([action_prob[action-2]]) ))
                 if done:
-                    print("Episode finished after {} timesteps".format(reward_tensor.shape[0]))
                     break
             
-            total_reward = np.sum(reward_tensor)
-            episode_reward = np.append(episode_reward, total_reward)
+            total_reward = np.sum(self.memory.rewards)
+            total_rewards.append(total_reward)
             # Discount and Normalize rewards
-            Tn = reward_tensor.shape[0]
-            reward_tensor = self.karparthy_discount_reward(reward_tensor)
-            #for t in range(Tn):
-            #    reward_tensor[t] = self.discount_reward(reward_tensor, t, Tn) 
-            #reward_tensor = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-10) # normalization
-            #b = np.sum(reward_tensor) / reward_tensor.shape[0] # expectation of reward
-            #advatange_function = (torch.from_numpy(reward_tensor - b)).float()
+            reward_tensor = self.karparthy_discount_reward(self.memory.rewards)
             advantage_function = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-5)
             advantage_function =  (torch.from_numpy(advantage_function)).float()
-            total_rewards.append(total_reward)
-
-
-            # action tensor prepro
-            action_tensor -= 2
-
             # update
             if self.improvement == "PG":
-                self.vanilla_update(observation_tensor, action_tensor, advantage_function)
-            elif self.improvement == "PPO" :
-                self.ppo_update(observation_tensor, action_tensor, logprob_tensor, advantage_function)
-
-            
-            # record
-            print("\rEp: {} Average of last 10: {:.2f}".format(
-                episode + 1, np.mean(total_rewards[-30:])), end="")    
+                self.vanilla_update(advantage_function)
+            # record        
+            print("episode",episode,"last action",self.memory.actions[-1],"action prob",self.memory.action_prbo[-1],"average reward", np.mean(total_rewards[-30:]))
+            # clear
+            self.memory.clear_memory()
         plt.plot(range(NN),episode_reward)
         plt.savefig('pg_loss.png')
         ##################
 
-
-    def ppo(self):
-        pass
-
-
-    def vanilla_update(self, observation_tensor, action_tensor, advantage_function):
+    def vanilla_update(self,advantage_function):
         # gradient  (reference : p.29 http://rll.berkeley.edu/deeprlcourse/f17docs/lecture_4_policy_gradient.pdf)
-        self.policy.train()
-        if type(observation_tensor) == type(list()): # if use list to tensor
-            #print("observation shape", len(observation_tensor))
-            x = torch.FloatTensor(observation_tensor)
-            #print("tensor x shape", x.shape)
-        else : # if use nupmy array
-            x = (torch.from_numpy(observation_tensor)).float()
-        flatten_x = self.flatten(x)
-        ### Device: CPU -> GPU
-        flatten_x = flatten_x.to(self.device)
-        action_tensor = (torch.from_numpy(action_tensor).long()).to(self.device)
+        self.net.policy.train()        
+        x = torch.stack(self.memory.states).float().to(self.device).detach()
+        action_tensor = torch.stack(self.memory.actions).to(self.device).detach()
         advantage_function = advantage_function.to(self.device)
-        ### Compute Loss and gradient
-        log_logits = self.policy(flatten_x)
-        
+        old_action_probs = torch.stack(self.memory.logprobs).reshape(-1).to(self.device).detach()
+        flatten_x = self.flatten(x).to(self.device)
+        logits = self.net.policy(flatten_x)   
         #if no softmax
         #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
         #negative_log_likelihoods = negative_log_likelihoods_fn(logits, action_tensor - 1) # loss = (Tn,)
@@ -348,11 +299,24 @@ class Agent_PG(Agent):
         
         #else
         #logprob = torch.log(logits)
+
+        """ PG loss
         selected_logprobs = advantage_function * \
-                        log_logits[np.arange(len(action_tensor)), action_tensor]
+                        logits[np.arange(len(action_tensor)), action_tensor]
         loss = (-selected_logprobs.mean())           
         self.optimizer.zero_grad()
         loss.backward()
+        """
+
+        """ PPO loss """
+        #vs = np.array([[1., 0.], [0., 1.]])
+        #ts = torch.FloatTensor(vs[action.cpu().numpy()])
+        new_action_prob = logits.gather(1, action_tensor).reshape(-1) #(N)
+        r = torch.exp((new_action_prob - old_action_probs))
+        loss1 = r * advantage_function
+        loss2 = torch.clamp(r, 1-0.2, 1+0.2) * advantage_function
+        loss = -torch.min(loss1, loss2)
+        loss = torch.mean(loss)
         
                     
         # Update theta 
@@ -360,37 +324,10 @@ class Agent_PG(Agent):
         # argmin -log(likelihood) = argmax log(likelihood)
         # that is, gradient descent of -log(likelihood) is equivalent to gradient ascent of log(likelihood)
         # we can call pytorch step() function, just like usual deep learning problem !
+        self.optimizer.zero_grad()
+        loss.backward()
         self.optimizer.step()
-
-    def ppo_update(self, observation_tensor, action_tensor, logprob_tensor, advantage_function):   
-
-        
-        # convert list and numpy to tensor
-        old_states = torch.FloatTensor(observation_tensor).to(self.device).detach()
-        old_actions = (torch.from_numpy(action_tensor).long()).to(self.device).detach()
-        old_logprobs = (torch.from_numpy(logprob_tensor)).to(self.device).detach()
-        
-        # Optimize policy for K epochs:
-        for _ in range(self.K_epochs):
-            # Evaluating old actions and values :
-            logprobs, state_values, dist_entropy = self.policy.evaluate(old_states, old_actions)
-            
-            # Finding the ratio (pi_theta / pi_theta__old):
-            ratios = torch.exp(logprobs - old_logprobs.detach())
-                
-            # Finding Surrogate Loss:
-            advantages = rewards - state_values.detach()
-            surr1 = ratios * advantages
-            surr2 = torch.clamp(ratios, 1-self.eps_clip, 1+self.eps_clip) * advantages
-            loss = -torch.min(surr1, surr2) + 0.5*self.MseLoss(state_values, rewards) - 0.01*dist_entropy
-            
-            # take gradient step
-            self.optimizer.zero_grad()
-            loss.mean().backward()
-            self.optimizer.step()
-        
-        # Copy new weights into old policy:
-        self.policy_old.load_state_dict(self.policy.state_dict())    
+   
 
 
     def make_action(self, observation, test=True):
@@ -411,26 +348,26 @@ class Agent_PG(Agent):
         # Feedforward of the Network
         
         if self.improvement == "PG":
-            self.policy.eval()
+            self.net.policy.eval()
             with torch.no_grad():
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
                 x = torch.from_numpy(x) # numpy to tensor
                 x = x.float() # type conversion
                 flatten_x = self.flatten(x)
                 flatten_x = flatten_x.to(self.device)
-                log_logits = self.policy(flatten_x)
+                log_logits = self.net.policy(flatten_x)
                 action_prob = np.exp(log_logits.cpu().numpy()[0]) 
                 action = np.random.choice(range(2), p=action_prob)
-                return int(action + 2)
+                return int(action + 2), action_prob
         elif self.improvement == "PPO":
-            self.policy_old.eval()
+            self.net.policy_old.eval()
             with torch.no_grad():
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
                 x = torch.from_numpy(x) # numpy to tensor
                 x = x.float() # type conversion
                 flatten_x = self.flatten(x)
                 flatten_x = flatten_x.to(self.device)
-                logits = self.policy_old(flatten_x)
+                logits = self.net.policy_old(flatten_x)
                 action_probs = np.exp(logits.cpu().numpy()[0]) 
                 dist = torch.distributions.Categorical(action_probs)
                 action = dist.sample()       
@@ -447,7 +384,7 @@ class Agent_PG(Agent):
         gamma = 0.99
         discounted_r = np.zeros_like(r)
         running_add = 0
-        for t in reversed(range(0, r.shape[0])):
+        for t in reversed(range(0, len(r))):
             if r[t] != 0 : 
                 running_add = 0 # reset the sum, since this was a game boundary (pong specific!)
             running_add = running_add * gamma + r[t]
