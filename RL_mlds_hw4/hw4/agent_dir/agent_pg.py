@@ -289,8 +289,7 @@ class Agent_PG(Agent):
         action_tensor = torch.stack(self.memory.actions).to(self.device).detach()
         advantage_function = advantage_function.to(self.device)
         old_action_probs = torch.stack(self.memory.logprobs).reshape(-1).to(self.device).detach()
-        flatten_x = self.flatten(x).to(self.device)
-        logits = self.net.policy(flatten_x)   
+        flatten_x = self.flatten(x).to(self.device) 
         #if no softmax
         #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
         #negative_log_likelihoods = negative_log_likelihoods_fn(logits, action_tensor - 1) # loss = (Tn,)
@@ -311,23 +310,26 @@ class Agent_PG(Agent):
         """ PPO loss """
         #vs = np.array([[1., 0.], [0., 1.]])
         #ts = torch.FloatTensor(vs[action.cpu().numpy()])
-        new_action_prob = logits.gather(1, action_tensor).reshape(-1) #(N)
-        r = torch.exp((new_action_prob - old_action_probs))
-        loss1 = r * advantage_function
-        loss2 = torch.clamp(r, 1-0.2, 1+0.2) * advantage_function
-        loss = -torch.min(loss1, loss2)
-        loss = torch.mean(loss)
+        for _ in range(4):
+            logits = self.net.policy(flatten_x)  
+            new_action_prob = logits.gather(1, action_tensor).reshape(-1) #(N)
+            r = torch.exp((new_action_prob - old_action_probs))
+            loss1 = r * advantage_function
+            loss2 = torch.clamp(r, 1-0.2, 1+0.2) * advantage_function
+            loss = -torch.min(loss1, loss2)
+            loss = torch.mean(loss)
         
-                    
-        # Update theta 
-        # Note : 
-        # argmin -log(likelihood) = argmax log(likelihood)
-        # that is, gradient descent of -log(likelihood) is equivalent to gradient ascent of log(likelihood)
-        # we can call pytorch step() function, just like usual deep learning problem !
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
+                        
+            # Update theta 
+            # Note : 
+            # argmin -log(likelihood) = argmax log(likelihood)
+            # that is, gradient descent of -log(likelihood) is equivalent to gradient ascent of log(likelihood)
+            # we can call pytorch step() function, just like usual deep learning problem !
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
    
+        self.net.policy_old.load_state_dict(self.net.policy.state_dict())
 
 
     def make_action(self, observation, test=True):
@@ -367,11 +369,10 @@ class Agent_PG(Agent):
                 x = x.float() # type conversion
                 flatten_x = self.flatten(x)
                 flatten_x = flatten_x.to(self.device)
-                logits = self.net.policy_old(flatten_x)
-                action_probs = np.exp(logits.cpu().numpy()[0]) 
-                dist = torch.distributions.Categorical(action_probs)
-                action = dist.sample()       
-                return int(action.item() + 2), dist.log_prob(action)
+                log_logits = self.net.policy_old(flatten_x)
+                action_prob = np.exp(log_logits.cpu().numpy()[0]) 
+                action = np.random.choice(range(2), p=action_prob)
+                return int(action + 2), action_prob
         
 
     def discount_reward(self, reward_tensor, t, Tn, discount_factor=0.99):
