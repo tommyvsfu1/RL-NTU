@@ -316,6 +316,7 @@ class Agent_PG(Agent):
                 self.vanilla_update(advantage_function)
             # record        
             print("episode",episode,"last action",self.memory.actions[-1],"action prob",self.memory.action_prbo[-1],"average reward", np.mean(total_rewards[-30:]))
+            self.tensorboard.scalar_summary("average_reward",np.mean(total_rewards[-30:]))
             # clear
             self.memory.clear_memory()
         plt.plot(range(NN),episode_reward)
@@ -403,6 +404,7 @@ class Agent_PG(Agent):
                 action = np.random.choice(range(2), p=action_prob)
                 return int(action + 2), action_prob
         elif self.improvement == "PPO":
+            print("tests")
             self.net.policy_old.eval()
             with torch.no_grad():
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
