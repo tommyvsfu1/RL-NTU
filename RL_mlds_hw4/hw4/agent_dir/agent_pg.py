@@ -6,7 +6,8 @@ import torch
 import matplotlib.pyplot as plt
 import cv2
 import skimage
-
+from logger import TensorboardLogger
+import torch.nn.functional as F  # useful stateless functions
 seed = 9487
 np.random.seed(seed)
 torch.manual_seed(seed)
@@ -24,6 +25,10 @@ class Memory:
         del self.logprobs[:]
         del self.rewards[:]
         del self.action_prbo[:]
+
+def flatten(x):
+    N = x.shape[0] # read in N, C, H, W
+    return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
 
 class ActorCritic(torch.nn.Module):
     def __init__(self, state_dim, action_dim, n_latent_var):
@@ -76,15 +81,48 @@ class ActorCritic(torch.nn.Module):
         return action_logprobs, torch.squeeze(state_value), dist_entropy
     
 
+class MLP(torch.nn.Module):
+    def __init__(self):
+        super(MLP, self).__init__()  
+        # CNN (feature layers)    
+        self.conv1 = torch.nn.Conv2d(1,32,kernel_size=8,stride=[4,4],padding=0)
+        torch.nn.init.kaiming_normal_(self.conv1.weight)
+        self.conv2 = torch.nn.Conv2d(32,64,kernel_size=4,stride=[2,2],padding=0)
+        torch.nn.init.kaiming_normal_(self.conv2.weight)
+        self.conv3 = torch.nn.Conv2d(64,64,kernel_size=3,stride=[1,1],padding=0)
+        torch.nn.init.kaiming_normal_(self.conv3.weight)
+        
+        # actor
+        self.fc4 = torch.nn.Linear((2304), 512)
+        self.fc5 = torch.nn.Linear((512), 2)
+        torch.nn.init.kaiming_normal_(self.fc4.weight)
+        torch.nn.init.kaiming_normal_(self.fc5.weight)
+        self.actor_layer = torch.nn.LogSoftmax(dim=-1)
+        
+        # critic 
+        #self.fc6 = torch.nn.Linear((512), 1)
+        #torch.nn.init.kaiming_normal_(self.fc6.weight)
+
+    def forward(self, x):
+        c1 = F.relu(self.conv1(x))
+        c2 = F.relu(self.conv2(c1))
+        c3 = F.relu(self.conv3(c2))
+        f4 = F.relu(self.fc4(flatten(c3)))
+        #critic_value = self.fc6(f4)
+        policy_value = self.actor_layer(self.fc5(f4))
+
+        return policy_value 
+
 class PPO:
     def __init__(self):
-        self.lr = 1e-3
+        self.lr = 1e-4
         self.betas = 1
         self.gamma = 0.99
         self.eps_clip = 0.2
         self.K_epochs = 1
         self.device = 'cpu'
         D_in, H, D_out = 80*80, 256, 2
+        """
         self.policy = torch.nn.Sequential(
             torch.nn.Linear(D_in, H),
             torch.nn.ReLU(),
@@ -97,6 +135,9 @@ class PPO:
             torch.nn.Linear(H, D_out),
             torch.nn.LogSoftmax(dim=-1)
         ).to(self.device)
+        """
+        self.policy = MLP()
+        self.policy_old = MLP()
         self.policy_old.load_state_dict(self.policy.state_dict())
         self.optimizer = torch.optim.Adam(self.policy.parameters(),
                                               lr=self.lr)
@@ -173,10 +214,9 @@ def prepro(I,image_size=[80,80]):
     I[I == 144] = 0 # erase background (background type 1)
     I[I == 109] = 0 # erase background (background type 2)
     I[I != 0] = 1 # everything else (paddles, ball) just set to 1
-    return I.astype(np.float).ravel()
+    #return I.astype(np.float).ravel().transpose((2, 0, 1)) # 2 layer FC
+    return (np.expand_dims(I.astype(np.float),2)).transpose((2, 0, 1))  # MLP
     
-
-
 class Agent_PG(Agent):
     def __init__(self, env, args):
         """
@@ -208,11 +248,11 @@ class Agent_PG(Agent):
         # Model : Neural Network
         self.device = torch.device('cpu')
         print("Device...  ",self.device)
-
-        self.improvement = "PG"
+        self.tensorboard = TensorboardLogger("./PPO_v2/exp1/")
+        self.improvement = "PPO"
         self.net = PPO()
         self.memory = Memory()
-        self.optimizer = torch.optim.RMSprop(self.net.policy.parameters(), lr=1e-3)
+        self.optimizer = torch.optim.RMSprop(self.net.policy.parameters(), lr=1e-4)
         ##################
 
 
@@ -272,7 +312,7 @@ class Agent_PG(Agent):
             advantage_function = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-5)
             advantage_function =  (torch.from_numpy(advantage_function)).float()
             # update
-            if self.improvement == "PG":
+            if self.improvement == "PPO":
                 self.vanilla_update(advantage_function)
             # record        
             print("episode",episode,"last action",self.memory.actions[-1],"action prob",self.memory.action_prbo[-1],"average reward", np.mean(total_rewards[-30:]))
@@ -289,7 +329,8 @@ class Agent_PG(Agent):
         action_tensor = torch.stack(self.memory.actions).to(self.device).detach()
         advantage_function = advantage_function.to(self.device)
         old_action_probs = torch.stack(self.memory.logprobs).reshape(-1).to(self.device).detach()
-        flatten_x = self.flatten(x).to(self.device) 
+        #flatten_x = flatten(x).to(self.device) 
+        flatten_x = x.to(self.device)
         #if no softmax
         #negative_log_likelihoods_fn = torch.nn.CrossEntropyLoss(reduction='none') # do not divide by batch, and return vector
         #negative_log_likelihoods = negative_log_likelihoods_fn(logits, action_tensor - 1) # loss = (Tn,)
@@ -318,7 +359,7 @@ class Agent_PG(Agent):
             loss2 = torch.clamp(r, 1-0.2, 1+0.2) * advantage_function
             loss = -torch.min(loss1, loss2)
             loss = torch.mean(loss)
-        
+            self.tensorboard.scalar_summary("loss", loss)
                         
             # Update theta 
             # Note : 
@@ -355,7 +396,7 @@ class Agent_PG(Agent):
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
                 x = torch.from_numpy(x) # numpy to tensor
                 x = x.float() # type conversion
-                flatten_x = self.flatten(x)
+                flatten_x = flatten(x)
                 flatten_x = flatten_x.to(self.device)
                 log_logits = self.net.policy(flatten_x)
                 action_prob = np.exp(log_logits.cpu().numpy()[0]) 
@@ -367,9 +408,11 @@ class Agent_PG(Agent):
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
                 x = torch.from_numpy(x) # numpy to tensor
                 x = x.float() # type conversion
-                flatten_x = self.flatten(x)
-                flatten_x = flatten_x.to(self.device)
-                log_logits = self.net.policy_old(flatten_x)
+                """ FC
+                #flatten_x = flatten(x)
+                #flatten_x = flatten_x.to(self.device)
+                """
+                log_logits = self.net.policy_old(x)
                 action_prob = np.exp(log_logits.cpu().numpy()[0]) 
                 action = np.random.choice(range(2), p=action_prob)
                 return int(action + 2), action_prob
@@ -392,9 +435,7 @@ class Agent_PG(Agent):
             discounted_r[t] = running_add
         return discounted_r
 
-    def flatten(self,x):
-        N = x.shape[0] # read in N, C, H, W
-        return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
+
 
 
     def discount_rewards(self,rewards, gamma=0.99):

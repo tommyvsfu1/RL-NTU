@@ -7,7 +7,10 @@ from PIL import Image
 import torch
 from torch.nn import functional as F
 from torch import nn
+from logger import TensorboardLogger
 
+
+tensorboard = TensorboardLogger("./logger_ppo/debug_721/v2/")
 class Policy(nn.Module):
     def __init__(self):
         super(Policy, self).__init__()
@@ -61,12 +64,32 @@ class Policy(nn.Module):
         ts = torch.FloatTensor(vs[action.cpu().numpy()])
 
         logits = self.layers(d_obs)
-        r = torch.sum(F.softmax(logits, dim=1) * ts, dim=1) / action_prob
-        loss1 = r * advantage
-        loss2 = torch.clamp(r, 1-self.eps_clip, 1+self.eps_clip) * advantage
-        loss = -torch.min(loss1, loss2)
-        loss = torch.mean(loss)
 
+        print("mul", (F.softmax(logits, dim=1) * ts).shape)
+        print("action_prob shape", action_prob.shape)
+        r = torch.sum(F.softmax(logits, dim=1) * ts, dim=1) / action_prob
+        tensorboard.histogram_summary("prob", torch.sum(F.softmax(logits, dim=1) * ts, dim=1) )
+        tensorboard.histogram_summary("old_prob", action_prob)
+        tensorboard.histogram_summary("ratio", r)
+        tensorboard.histogram_summary("advantage", advantage)
+        print("r shape", r.shape)
+        loss1 = r * advantage
+        print("advantage", advantage.shape)
+        loss2 = torch.clamp(r, 1-self.eps_clip, 1+self.eps_clip) * advantage
+        print("loss1 shape", loss1.shape)
+        print("loss2 shape", loss2.shape)
+        loss = -torch.min(loss1, loss2)
+        print("loss shape", loss.shape)
+        loss = torch.mean(loss)
+        """
+        mul torch.Size([24576, 2])
+        action_prob shape torch.Size([24576])
+        old_action_prob shape torch.Size([24576])
+        r shape torch.Size([24576])
+        advantage torch.Size([24576])
+        loss1 shape torch.Size([24576])
+        loss2 shape torch.Size([24576])
+        """
         return loss
 
 env = gym.make('PongNoFrameskip-v4')
@@ -122,7 +145,7 @@ for it in range(100000):
         action_batch = torch.LongTensor([action_history[idx] for idx in idxs])
         action_prob_batch = torch.FloatTensor([action_prob_history[idx] for idx in idxs])
         advantage_batch = torch.FloatTensor([discounted_rewards[idx] for idx in idxs])
-
+        tensorboard.time_s += 1
         opt.zero_grad()
         loss = policy(d_obs_batch, action_batch, action_prob_batch, advantage_batch)
         loss.backward()
