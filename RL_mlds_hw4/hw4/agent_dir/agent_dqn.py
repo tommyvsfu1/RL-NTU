@@ -202,11 +202,11 @@ class Agent_DQN(Agent):
         ##################
         # YOUR CODE HERE #
         
-        NUM_EPISODES = 5000
+        NUM_EPISODES = 50000
         TARGET_UPDATE_C = 1000
         UPDATE_FREQUENCY = 4
         DEBUG_COUNT = 0
-        LINEAR_DECLINE_STEP = 100000
+        LINEAR_DECLINE_STEP = 60000
         MAX_STEP = 2000
         time_step = 0
         epsisode_history = []
