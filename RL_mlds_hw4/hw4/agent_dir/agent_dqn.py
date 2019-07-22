@@ -17,6 +17,8 @@ np.random.seed(SEED)
 
 Transition = namedtuple('Transition',
                         ('state', 'action','reward', 'next_state'))
+
+
 def expand_dim(x):
     y = torch.unsqueeze(input=x,dim=0)
     return y
@@ -152,7 +154,8 @@ class Agent_DQN(Agent):
         self.Q_hat_fn = Q_pi(self.env.get_action_space().n, self.device).to(device=self.device)
         self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
         self.Q_hat_fn.eval()
-        self.replay_buffer = ReplayBuffer() 
+        self.REPLAY_BUFFER_START_SIZE = 20000
+        self.replay_buffer = ReplayBuffer(self.REPLAY_BUFFER_START_SIZE) 
         self.BATCH_SIZE = 32
         self.Q_epsilon = 1.0
         self.optimizer = torch.optim.RMSprop(self.Q_fn.parameters(),lr=1.5e-4)
@@ -232,11 +235,12 @@ class Agent_DQN(Agent):
                 s_0 = s_1
 
                 # optimize Q model
-                if len(self.replay_buffer) % UPDATE_FREQUENCY == 0:        
+                if (time_step % UPDATE_FREQUENCY) == 0 and len(self.replay_buffer) > self.REPLAY_BUFFER_START_SIZE:        
+                    print("update")
                     self.optimize_model("DQN")
                 
                 # update  Q' model
-                if episode % TARGET_UPDATE_C == 0:
+                if time_step % TARGET_UPDATE_C == 0 and len(self.replay_buffer) > self.REPLAY_BUFFER_START_SIZE:
                     self.Q_hat_fn.load_state_dict(self.Q_fn.state_dict())
                 
                 self.Q_epsilon = self.epsilon_decline(time_step, LINEAR_DECLINE_STEP)
