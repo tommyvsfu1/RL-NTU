@@ -96,7 +96,7 @@ class Q_pi(torch.nn.Module):
             a = torch.argmax(pred).item()
         else :
             a = np.random.choice(range(4))
-        tensorboard.scalar_summary("make_action_action", a)
+        #tensorboard.scalar_summary("make_action_action", a)
         return a
 
 
@@ -236,7 +236,6 @@ class Agent_DQN(Agent):
 
                 # optimize Q model
                 if (time_step % UPDATE_FREQUENCY) == 0 and len(self.replay_buffer) > self.REPLAY_BUFFER_START_SIZE:        
-                    print("update")
                     self.optimize_model("DQN")
                 
                 # update  Q' model
@@ -246,6 +245,7 @@ class Agent_DQN(Agent):
                 self.Q_epsilon = self.epsilon_decline(time_step, LINEAR_DECLINE_STEP)
             epsisode_history.append(episode_reward)
             print("episode",episode,"average 100 reward",np.mean(epsisode_history[-100:]),"time_step",time_step,"epsilon",self.Q_epsilon)
+            self.tensorboard.scalar_summary("average reward", np.mean(epsisode_history[-100:]))
             #print("\rEpisode Reward: {:.2f}".format(episode_reward, end=""))
         plt.plot(range(len(epsisode_history)), epsisode_history)
         plt.savefig('reward_history.png')
@@ -275,7 +275,7 @@ class Agent_DQN(Agent):
         # .gater will select the right index
         # reference : https://www.cnblogs.com/HongjianChen/p/9451526.html
         state_action_values = self.Q_fn(state_batch).gather(1, action_batch)
-        self.tensorboard.histogram_summary("state_action_values", state_action_values)
+        #self.tensorboard.histogram_summary("state_action_values", state_action_values)
 
         """ Q_hat(Target) Network """
         # .max(1,keepdim=True)[0] return (N,1) vector 
@@ -285,9 +285,9 @@ class Agent_DQN(Agent):
         if improvment == "DQN":
             next_state_values= self.Q_hat_fn(next_state_batch).max(1,keepdim=True)[0].detach()
             expected_state_action_values = 0.99 * (next_state_values) + reward_batch
-            self.tensorboard.histogram_summary("next_state_values", next_state_values)
-            self.tensorboard.histogram_summary("reward_batch", reward_batch)
-            self.tensorboard.histogram_summary("expected_bellman", expected_state_action_values)
+            #self.tensorboard.histogram_summary("next_state_values", next_state_values)
+            #self.tensorboard.histogram_summary("reward_batch", reward_batch)
+            #self.tensorboard.histogram_summary("expected_bellman", expected_state_action_values)
         elif improvment == "DDQN":
             select_action_values= self.Q_fn(next_state_batch).detach()
             #print("select action values", select_action_values)
@@ -304,13 +304,13 @@ class Agent_DQN(Agent):
         self.tensorboard.scalar_summary("total_loss", loss.item())
 
 
-        self.tensorboard.histogram_summary("q_conv1", self.Q_fn.conv1.weight)
-        self.tensorboard.histogram_summary("q_conv2", self.Q_fn.conv2.weight)
-        self.tensorboard.histogram_summary("q_conv3", self.Q_fn.conv3.weight)
-        self.tensorboard.histogram_summary("q_fc1_adv", self.Q_fn.fc1_adv.weight)
-        self.tensorboard.histogram_summary("q_fc2_adv", self.Q_fn.fc2_adv.weight)
-        self.tensorboard.histogram_summary("q_fc1_val", self.Q_fn.fc1_val.weight)
-        self.tensorboard.histogram_summary("q_fc2_val", self.Q_fn.fc2_val.weight)
+        #self.tensorboard.histogram_summary("q_conv1", self.Q_fn.conv1.weight)
+        #self.tensorboard.histogram_summary("q_conv2", self.Q_fn.conv2.weight)
+        #self.tensorboard.histogram_summary("q_conv3", self.Q_fn.conv3.weight)
+        #self.tensorboard.histogram_summary("q_fc1_adv", self.Q_fn.fc1_adv.weight)
+        #self.tensorboard.histogram_summary("q_fc2_adv", self.Q_fn.fc2_adv.weight)
+        #self.tensorboard.histogram_summary("q_fc1_val", self.Q_fn.fc1_val.weight)
+        #self.tensorboard.histogram_summary("q_fc2_val", self.Q_fn.fc2_val.weight)
 
         # update
         self.optimizer.zero_grad()
