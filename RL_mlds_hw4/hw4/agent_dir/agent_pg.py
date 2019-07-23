@@ -8,6 +8,7 @@ import cv2
 import skimage
 from logger import TensorboardLogger
 import torch.nn.functional as F  # useful stateless functions
+import copy
 seed = 11037
 np.random.seed(seed)
 torch.manual_seed(seed)
@@ -19,13 +20,14 @@ class Memory:
         self.logprobs = []
         self.rewards = []
         self.action_prob = []
+        self.values = []
     def clear_memory(self):
         del self.actions[:]
         del self.states[:]
         del self.logprobs[:]
         del self.rewards[:]
         del self.action_prob[:]
-
+        del self.values[:]
 def flatten(x):
     N = x.shape[0] # read in N, C, H, W
     return x.view(N, -1)  # "flatten" the C * H * W values into a single vector per image
@@ -100,27 +102,28 @@ class MLP(torch.nn.Module):
         self.actor_layer = torch.nn.LogSoftmax(dim=-1)
         
         # critic 
-        #self.fc6 = torch.nn.Linear((512), 1)
-        #torch.nn.init.kaiming_normal_(self.fc6.weight)
+        self.fc6 = torch.nn.Linear((512), 1)
+        torch.nn.init.kaiming_normal_(self.fc6.weight)
 
     def forward(self, x):
         c1 = F.relu(self.conv1(x))
         c2 = F.relu(self.conv2(c1))
         c3 = F.relu(self.conv3(c2))
         f4 = F.relu(self.fc4(flatten(c3)))
-        #critic_value = self.fc6(f4)
+        critic_value = self.fc6(f4)
         policy_value = self.actor_layer(self.fc5(f4))
 
-        return policy_value 
+        return policy_value, critic_value 
 
-class PPO:
-    def __init__(self):
+class PPO():
+    def __init__(self,device):
         self.lr = 1e-4
         self.betas = 1
         self.gamma = 0.99
         self.eps_clip = 0.2
         self.K_epochs = 1
-        self.device = 'cpu'
+        self.device = device
+        print("PPO using device:", self.device)
         D_in, H, D_out = 80*80, 256, 2
         """
         self.policy = torch.nn.Sequential(
@@ -136,8 +139,8 @@ class PPO:
             torch.nn.LogSoftmax(dim=-1)
         ).to(self.device)
         """
-        self.policy = MLP()
-        self.policy_old = MLP()
+        self.policy = MLP().to(self.device)
+        self.policy_old = MLP().to(self.device)
         self.policy_old.load_state_dict(self.policy.state_dict())
         self.optimizer = torch.optim.Adam(self.policy.parameters(),
                                               lr=self.lr)
@@ -246,11 +249,14 @@ class Agent_PG(Agent):
         
         
         # Model : Neural Network
-        self.device = torch.device('cpu')
+        if torch.cuda.is_available():
+            self.device = torch.device('cuda')
+        else :
+            self.device = torch.device('cpu')
         print("Device...  ",self.device)
-        self.tensorboard = TensorboardLogger("./PPO_v2/exp1/")
+        self.tensorboard = TensorboardLogger("./PPO_v2/exp2_batch/")
         self.improvement = "PPO"
-        self.net = PPO()
+        self.net = PPO(self.device)
         self.memory = Memory()
         self.optimizer = torch.optim.RMSprop(self.net.policy.parameters(), lr=1e-4)
         ##################
@@ -296,7 +302,7 @@ class Agent_PG(Agent):
                     delta_state = s_1 - s_0
                     s_0 = s_1              
 
-                    action, action_prob = self.make_action(delta_state) # logprob is for PPO
+                    action, action_prob, v = self.make_action(delta_state) # logprob is for PPO
                     s_1, reward, done, info = self.env.step(action)
                     s_1 = prepro(s_1)
                     
@@ -306,6 +312,7 @@ class Agent_PG(Agent):
                     self.memory.rewards.append(reward)
                     self.memory.action_prob.append(action_prob)
                     self.memory.logprobs.append(torch.log( torch.tensor([action_prob[action-2]]) ))
+                    self.memory.values.append(v)
                     reward_history.append(reward)
                     if done:
                         reward_sum = sum(reward_history[-t:])
@@ -317,7 +324,8 @@ class Agent_PG(Agent):
             total_reward = np.sum(self.memory.rewards)
             total_rewards.append(total_reward)
             # Discount and Normalize rewards
-            reward_tensor = self.karparthy_discount_reward(self.memory.rewards)
+            #reward_tensor = self.karparthy_discount_reward(self.memory.rewards)
+            reward_tensor = self.gae()
             advantage_function = (reward_tensor - np.mean(reward_tensor)) / (np.std(reward_tensor) + 1e-5)
             advantage_function =  (torch.from_numpy(advantage_function)).float()
             # update
@@ -331,6 +339,18 @@ class Agent_PG(Agent):
         plt.plot(range(NN),episode_reward)
         plt.savefig('pg_loss.png')
         ##################
+
+    def gae(self,gamma=0.99, lambd=1.0):
+        # reference code : https://github.com/JasonYao81000/MLDS2018SPRING/blob/master/hw4/agent_dir/agent_pg.py
+        v_preds = self.memory.values
+        v_preds_next = v_preds[1:] + [0]
+        deltas = [r_t + gamma * v_next - v for r_t, v_next, v in zip(self.memory.rewards, v_preds_next, v_preds)]
+        # calculate generative advantage estimator(lambda = 1), see ppo paper eq(11)
+        gaes = copy.deepcopy(deltas)
+        for t in reversed(range(len(gaes) - 1)):  # is T-1, where T is time step which run policy
+            gaes[t] = gaes[t] + gamma * gaes[t + 1]
+        
+        return gaes
 
     def vanilla_update(self,advantage_function):
         # gradient  (reference : p.29 http://rll.berkeley.edu/deeprlcourse/f17docs/lecture_4_policy_gradient.pdf)
@@ -363,7 +383,7 @@ class Agent_PG(Agent):
         #ts = torch.FloatTensor(vs[action.cpu().numpy()])
         for _ in range(4):
             self.tensorboard.time_s += 1
-            logits = self.net.policy(flatten_x)  
+            logits, v = self.net.policy(flatten_x)  
             new_action_prob = logits.gather(1, action_tensor).reshape(-1) #(N)
             r = torch.exp((new_action_prob - old_action_probs))
             loss1 = r * advantage_function
@@ -423,10 +443,10 @@ class Agent_PG(Agent):
                 #flatten_x = flatten(x)
                 #flatten_x = flatten_x.to(self.device)
                 """
-                log_logits = self.net.policy_old(x)
+                log_logits, v = self.net.policy_old(x)
                 action_prob = np.exp(log_logits.cpu().numpy()[0]) 
                 action = np.random.choice(range(2), p=action_prob)
-                return int(action + 2), action_prob
+                return int(action + 2), action_prob, v
         
 
     def discount_reward(self, reward_tensor, t, Tn, discount_factor=0.99):

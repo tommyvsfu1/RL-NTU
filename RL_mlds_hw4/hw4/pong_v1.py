@@ -149,7 +149,6 @@ for it in range(100000):
         advantage_batch = torch.FloatTensor([discounted_rewards[idx] for idx in idxs])
         tensorboard.time_s += 1
         opt.zero_grad()
-        print("d_obs_batch", d_obs_batch.shape)
         loss = policy(d_obs_batch, action_batch, action_prob_batch, advantage_batch)
         loss.backward()
         opt.step()
