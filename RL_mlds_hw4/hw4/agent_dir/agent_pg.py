@@ -284,7 +284,7 @@ class Agent_PG(Agent):
         # YOUR CODE HERE #
         NN = 1000
         MAX_GAME_FRAME = 19000
-        NUM_WORKER = NUM_EPISODE = 5
+        NUM_WORKER = NUM_EPISODE = 1
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
@@ -312,7 +312,7 @@ class Agent_PG(Agent):
                     self.memory.rewards.append(reward)
                     self.memory.action_prob.append(action_prob)
                     self.memory.logprobs.append(torch.log( torch.tensor([action_prob[action-2]]) ))
-                    self.memory.values.append(v)
+                    self.memory.values.append(v.item())
                     reward_history.append(reward)
                     if done:
                         reward_sum = sum(reward_history[-t:])
@@ -381,15 +381,32 @@ class Agent_PG(Agent):
         """ PPO loss """
         #vs = np.array([[1., 0.], [0., 1.]])
         #ts = torch.FloatTensor(vs[action.cpu().numpy()])
+        reward_ = torch.from_numpy(np.array(self.memory.rewards)).float().to(self.device)
+        v_preds_next = self.memory.values[1:] + [0]
+        pred_next = torch.from_numpy(np.array(v_preds_next)).float().to(self.device)
+        fac_pred_next = torch.tensor([0.99]) * pred_next
         for _ in range(4):
             self.tensorboard.time_s += 1
             logits, v = self.net.policy(flatten_x)  
             new_action_prob = logits.gather(1, action_tensor).reshape(-1) #(N)
+            
+            # clamp loss
             r = torch.exp((new_action_prob - old_action_probs))
             loss1 = r * advantage_function
             loss2 = torch.clamp(r, 1-0.2, 1+0.2) * advantage_function
-            loss = -torch.min(loss1, loss2)
+            
+            # mse
+            mse_loss = 0.5*self.net.MseLoss(v.reshape(-1), reward_+fac_pred_next)
+            
+            # entropy
+            action_probs = torch.exp(logits)
+            dist = torch.distributions.Categorical(action_probs) 
+            entropy = 0.01*dist.entropy()
+
+            # mean
+            loss = -torch.min(loss1, loss2) + mse_loss - entropy 
             loss = torch.mean(loss)
+
             self.tensorboard.scalar_summary("loss", loss)
                         
             # Update theta 
@@ -438,7 +455,7 @@ class Agent_PG(Agent):
             with torch.no_grad():
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
                 x = torch.from_numpy(x) # numpy to tensor
-                x = x.float() # type conversion
+                x = x.float().to(self.device) # type conversion
                 """ FC
                 #flatten_x = flatten(x)
                 #flatten_x = flatten_x.to(self.device)
