@@ -211,7 +211,7 @@ class AgentPG(Agent):
                 # Saving the state and reward
                 self.old_model.states.append(state)
                 self.old_model.rewards.append(reward)
-                state = prepro(state_n)
+                s_1 = prepro(state_n)
                 episode_reward += reward
 
             # for logging 
@@ -225,13 +225,14 @@ class AgentPG(Agent):
             if epoch % self.display_freq == 0:
                 print('Epochs: %d/%d | Avg reward: %f '%
                        (epoch, self.num_episodes, avg_reward))
-                np.save('./results/' + self.model_name + '_episode_rewards.npy', np.array(episode_rewards))
+                #np.save('./results/' + self.model_name + '_episode_rewards.npy', np.array(episode_rewards))
             
             # save the model
             if epoch % self.save_freq == 0:
-                self.save('./checkpoints/' + self.model_name + '.cpt')
+                pass
+                #self.save('./checkpoints/' + self.model_name + '.cpt')
 
             # save the best model
             if avg_reward > best_avg_reward:
                 best_avg_reward = avg_reward
-                self.save('./checkpoints/' + self.model_name + '-best.cpt')
+                #self.save('./checkpoints/' + self.model_name + '-best.cpt')
