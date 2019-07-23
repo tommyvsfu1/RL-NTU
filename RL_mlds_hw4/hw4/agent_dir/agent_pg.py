@@ -135,9 +135,11 @@ class AgentPG(Agent):
         rewards = []
         # Discount future rewards back to the present using gamma
         for r in self.old_model.rewards[::-1]:
+            if r != 0:
+                R = 0
             R = r + self.gamma * R
             rewards.insert(0, R)
-        
+
         # turn rewards to pytorch tensor and standardize
         rewards = torch.Tensor(rewards).cuda()
         rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
