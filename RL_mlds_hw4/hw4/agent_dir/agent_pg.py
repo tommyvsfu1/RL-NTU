@@ -8,23 +8,23 @@ import cv2
 import skimage
 from logger import TensorboardLogger
 import torch.nn.functional as F  # useful stateless functions
-seed = 9487
+seed = 11037
 np.random.seed(seed)
 torch.manual_seed(seed)
-
+torch.cuda.manual_seed(seed)
 class Memory:
     def __init__(self):
         self.actions = []
         self.states = []
         self.logprobs = []
         self.rewards = []
-        self.action_prbo = []
+        self.action_prob = []
     def clear_memory(self):
         del self.actions[:]
         del self.states[:]
         del self.logprobs[:]
         del self.rewards[:]
-        del self.action_prbo[:]
+        del self.action_prob[:]
 
 def flatten(x):
     N = x.shape[0] # read in N, C, H, W
@@ -278,32 +278,41 @@ class Agent_PG(Agent):
         # YOUR CODE HERE #
         NN = 1000
         MAX_GAME_FRAME = 19000
+        NUM_WORKER = NUM_EPISODE = 5
         episode_reward = np.array([])
         loss_history = np.array([])
         total_rewards = []
-        for episode in range(NN):
-            # Collect Data (s,a,r)        
-            s_0 = self.env.reset() # reset environment
-            s_0 = prepro(s_0)
-            sample_action = self.env.action_space.sample()
-            s_1, _, _, _ = self.env.step(sample_action)
-            s_1 = prepro(s_1)
-            for _ in range(MAX_GAME_FRAME): 
-                delta_state = s_1 - s_0
-                s_0 = s_1              
-
-                action, action_prob = self.make_action(delta_state) # logprob is for PPO
-                s_1, reward, done, info = self.env.step(action)
+        reward_sum_running_avg = 0
+        for iteraition in range(NN):
+            reward_history = []
+            for w in range(NUM_WORKER):
+                # Collect Data (s,a,r)        
+                s_0 = self.env.reset() # reset environment
+                s_0 = prepro(s_0)
+                sample_action = self.env.action_space.sample()
+                s_1, _, _, _ = self.env.step(sample_action)
                 s_1 = prepro(s_1)
-                
-                # Store state
-                self.memory.states.append(torch.from_numpy(delta_state))
-                self.memory.actions.append(torch.tensor([action-2]))
-                self.memory.rewards.append(reward)
-                self.memory.action_prbo.append(action_prob)
-                self.memory.logprobs.append(torch.log( torch.tensor([action_prob[action-2]]) ))
-                if done:
-                    break
+                for t in range(MAX_GAME_FRAME): 
+                    delta_state = s_1 - s_0
+                    s_0 = s_1              
+
+                    action, action_prob = self.make_action(delta_state) # logprob is for PPO
+                    s_1, reward, done, info = self.env.step(action)
+                    s_1 = prepro(s_1)
+                    
+                    # Store state
+                    self.memory.states.append(torch.from_numpy(delta_state))
+                    self.memory.actions.append(torch.tensor([action-2]))
+                    self.memory.rewards.append(reward)
+                    self.memory.action_prob.append(action_prob)
+                    self.memory.logprobs.append(torch.log( torch.tensor([action_prob[action-2]]) ))
+                    reward_history.append(reward)
+                    if done:
+                        reward_sum = sum(reward_history[-t:])
+                        reward_sum_running_avg = 0.99*reward_sum_running_avg + 0.01*reward_sum if reward_sum_running_avg else reward_sum
+                        #print('Iteration %d, Episode %d  - last_action: %d, last_action_prob: %.2f, reward_sum: %.2f, running_avg: %.2f' % (iteraition, w, self.memory.actions[-1],self.memory.action_prob[-1], reward_sum, reward_sum_running_avg))
+                        print("Iteration",iteraition,"pisode",w,"last_action",self.memory.actions[-1],"action_prob",self.memory.action_prob[-1],"reward_sum",reward_sum,"running_average",reward_sum_running_avg)
+                        break
             
             total_reward = np.sum(self.memory.rewards)
             total_rewards.append(total_reward)
@@ -315,7 +324,7 @@ class Agent_PG(Agent):
             if self.improvement == "PPO":
                 self.vanilla_update(advantage_function)
             # record        
-            print("episode",episode,"last action",self.memory.actions[-1],"action prob",self.memory.action_prbo[-1],"average reward", np.mean(total_rewards[-30:]))
+            print("iteration",iteraition,"last action",self.memory.actions[-1],"action prob",self.memory.action_prob[-1],"average reward", np.mean(total_rewards[-30:]))
             self.tensorboard.scalar_summary("average_reward",np.mean(total_rewards[-30:]))
             # clear
             self.memory.clear_memory()
@@ -353,6 +362,7 @@ class Agent_PG(Agent):
         #vs = np.array([[1., 0.], [0., 1.]])
         #ts = torch.FloatTensor(vs[action.cpu().numpy()])
         for _ in range(4):
+            self.tensorboard.time_s += 1
             logits = self.net.policy(flatten_x)  
             new_action_prob = logits.gather(1, action_tensor).reshape(-1) #(N)
             r = torch.exp((new_action_prob - old_action_probs))
@@ -404,7 +414,6 @@ class Agent_PG(Agent):
                 action = np.random.choice(range(2), p=action_prob)
                 return int(action + 2), action_prob
         elif self.improvement == "PPO":
-            print("tests")
             self.net.policy_old.eval()
             with torch.no_grad():
                 x = np.expand_dims(observation, axis=0) # convert to (1,x.shape)
